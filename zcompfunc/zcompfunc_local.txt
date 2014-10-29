@@ -1,0 +1,4 @@
+/usr/local/Library/Contributions/brew_zsh_completion.zsh _brew
+#${HOME}/.go/src/github.com/motemen/ghq/zsh/_ghq _ghq
+${GOPATH}/src/github.com/motemen/ghq/zsh/_ghq _ghq
+#${GOPATH}/src/github.com/suin/kobito-cli/zsh-completions/_kobito _kobito-cli

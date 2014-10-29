@@ -1,0 +1,88 @@
+# Get OS X Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
+#function update () {
+    #F="\033[0;30m"  # 黒色(Black)
+    #F="\033[0;34m"  # 青色(Blue)
+    #F="\033[0;32m"  # 緑色(Green)
+    #F="\033[0;36m"  # 水色(Cyan)
+    #F="\033[0;31m"  # 赤色(Red)
+    #F="\033[0;35m"  # 紫色(Purple)
+    #F="\033[0;37m"  # 明灰色(Light Gray)
+    #F="\033[1;30m"  # 暗灰色(Dark Gray)
+    #F="\033[1;34m"  # Light Blue
+    F="\033[1;32m"  # Light Green
+    #F="\033[1;36m"  # Light Cyan
+    #F="\033[1;31m"  # Light Red
+    #F="\033[1;35m"  # Light Purple
+    #F="\033[1;33m"  # 黄色(Yellow)
+    #F="\033[1;37m"  # 白色(White)
+    f="\033[00m"    # すべての属性を無効
+
+    function print_cmd () {
+        echo "\n$F===>$f $@ $F<===$f"
+    }
+
+    function execute () {
+        print_cmd $@
+        if $@; then
+            return 0
+        else
+            echo "Error!"
+            return 1
+        fi
+    }
+
+    function git-check () {
+        if [[ -z $(git ls-files --modified --deleted --killed --others --exclude-standard 2> /dev/null) ]]; then
+            execute git pull --rebase && \
+            execute git submodule update --init --recursive && \
+            execute git fetch upstream && \
+            execute git merge upstream/master
+            return 0
+        else
+            execute git fetch origin && \
+            execute git fetch upstream && \
+            execute git status
+            #execute git diff
+            return 0
+        fi
+    }
+
+    #execute sudo softwareupdate -i -a
+    #execute sudo tlmgr update --self --all
+    execute pushd $YADR && \
+    git-check && \
+    execute rake update && \
+    execute popd
+    cd
+    setopt EXTENDED_GLOB
+    for rcfile in ls ~/Dropbox/yadr/zsh/prezto/runcoms/^(README.md|zpreztorc)(.N); do
+        ln -sfhv "$rcfile" ".${rcfile:t}"
+    done
+    execute grep -2 'for config_file ' ~/.zshrc
+    sed -i".bak" -e 's/^for config_file .*$//' ~/.zshrc
+    execute grep -2 'for config_file ' ~/.zshrc
+    execute read
+    execute pushd $YADR/zsh/prezto && \
+    git-check && \
+    execute popd
+    # rake updateでされる
+    #execute brew update && \
+    execute brew upgrade && \
+    execute brew cleanup
+    # rubyはシステムのを使うなら sudo必要，rbenvのならいらない
+    #if which update_rubygems >/dev/null; then
+    #    execute update_rubygems
+    #else
+    #    execute gem update --system
+    #fi && \
+    #execute gem update
+    #execute gem clean
+    if which pip-review >/dev/null; then
+        execute pip-review --auto
+    else
+        print_cmd pip install -U && \
+        pip list | cut -d ' ' -f 1 | xargs -t -J% pip install -U %
+    fi
+    print_cmd pip3 install -U && \
+    pip3 list | cut -d ' ' -f 1 | xargs -t -J% pip3 install -U %
+#}

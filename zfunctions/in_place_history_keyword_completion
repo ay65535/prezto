@@ -1,0 +1,11 @@
+# pecoで履歴からマッチするキーワードをその場に補完
+# ( https://gist.github.com/anonymous/19bbb1eadf4f1c6bd761 )
+#function in_place_history_keyword_completion() {
+    pos=CURSOR  # 現在のカーソル位置を取得
+    selected=$(history -10000 | cut -d' ' -f3- | tr '|' ' ' | tr ' ' '\n' | sort -u | $PERCOL) # 選択した結果
+    BUFFER="${BUFFER[1,$pos]}${selected}${BUFFER[$pos,-1]}"
+    CURSOR=$#BUFFER         # move cursor
+    zle -R -c               # refresh
+#}
+#zle -N in_place_history_keyword_completion
+#bindkey '^b' in_place_history_keyword_completion

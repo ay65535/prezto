@@ -1,0 +1,9 @@
+autoload -Uz read-from-minibuffer
+read-from-minibuffer "Insert oneliner comment:"
+if [[ -n ${REPLY} ]]; then
+    #if [[ ! -d ${ONELINER_DIR} ]]; then
+    #    mkdir ${ONELINER_DIR}
+    #fi
+    echo "\n# "${REPLY}"\n"${BUFFER} >>! ${ONELINER_TXT}
+    zle -M "Inserted \"${BUFFER}\" >>! ${ONELINER_TXT}"
+fi

@@ -1,0 +1,4 @@
+# brew options && brew info
+#function brewoi () {
+    brew options $1 && brew info $1
+#}

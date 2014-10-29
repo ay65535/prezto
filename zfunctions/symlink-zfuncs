@@ -1,0 +1,15 @@
+##
+# $fpathのどこかにある zcompfunc_local.txt の内容を読み取って、
+# $src から $dst へのシンボリックリンクを作成する
+#
+#function symlink-zfuncs () {
+    if [[ ! -d ${XDG_CACHE_HOME}/zsh/zcompfunc ]]; then
+        mkdir -p ${XDG_CACHE_HOME}/zsh/zcompfunc
+    fi
+    rm ${XDG_CACHE_HOME}/zsh/zcompfunc/_*
+    while read line ; do
+        local src="${line% *}"
+        local dst="${XDG_CACHE_HOME}/zsh/zcompfunc/${line##* }"
+        eval ln -sf $src $dst 2>/dev/null
+    done < ${^fpath}/zcompfunc_local.txt(N)
+#}

@@ -17,11 +17,17 @@ version is 4.3.17.
 
   2. Clone the repository:
 
-        git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
+        git clone --recursive https://github.com/ay65535/prezto.git ~/Dropbox/dotfiles/.config/zsh/.zprezto
+
+        or
+
+        git clone --recursive https://github.com/ay65535/prezto.git ~/Dropbox/yadr/zsh/prezto
 
   3. Create a new Zsh configuration by copying the Zsh configuration files
      provided:
 
+        cd
+        ln -s Dropbox/dotfiles/.config/zsh/.zprezto
         setopt EXTENDED_GLOB
         for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
           ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"

@@ -1,0 +1,7 @@
+#function peco-godoc () {
+    godoc $(ghq list --full-path | $PERCOL) | $PAGER
+    #zle accept-line
+    #zle clear-screen
+#}
+#zle -N peco-godoc
+#bindkey '^X^D' peco-godoc

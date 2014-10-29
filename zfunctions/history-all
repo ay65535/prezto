@@ -1,0 +1,4 @@
+# 全履歴の一覧を出力する
+#function history-all {
+    history -i 1
+#}

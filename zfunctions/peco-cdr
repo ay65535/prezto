@@ -1,0 +1,8 @@
+# 最近訪れたディレクトリにpecoで行けるようにするやつ。cdr -l使うと便利にできる。
+# ( http://shibayu36.hatenablog.com/entry/2014/06/27/223538 )
+local selected_dir="$(cdr -l | sed -e 's/^[[:digit:]]*[[:blank:]]*//' | $PERCOL)"
+if [[ -n "$selected_dir" ]]; then
+    BUFFER="cd ${selected_dir}"
+    zle accept-line
+fi
+zle clear-screen

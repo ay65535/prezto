@@ -1,3 +1,20 @@
+#!/usr/bin/env zsh
+
+ZVERVOSE_MODE=false
+ZPROF_MODE=false
+
+# zshプロファイリング用
+[[ $ZPROF_MODE = true ]] && zmodload zsh/zprof && zprof
+
+if [[ "$ZVERVOSE_MODE" = true ]]; then
+    setopt >! ~/set_opts_1_zshinit.txt
+    functions >! ~/set_functions_1_zshinit.txt
+    export >! ~/set_exports_1_zshinit.txt
+    [[ ! -z $MANPATH ]] && echo "MANPATH=$MANPATH" >>! ~/set_exports_1_zshinit.txt
+    echo "fpath=$fpath" >>! ~/set_exports_1_zshinit.txt
+    echo ".zshenv loading!" >! ~/set_zsh.txt
+fi
+
 #
 # Defines environment variables.
 #
@@ -5,7 +22,187 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+# PATHの初期値に /usr/local を含める (/usr/localを前に出すため初期設定のPATHは上書き)
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+
+# クラウドストレージ上の dotfiles ディレクトリを指定
+if [[ -d ~/Dropbox/dotfiles ]]; then
+    export CLOUD_DOT_DIR=~/Dropbox/dotfiles
+    export CLOUD_DATA_HOME=${CLOUD_DOT_DIR}/local/share  # Wineのファイルが環境依存 (パスが違うので共有しない)
+    export CLOUD_CONFIG_HOME=${CLOUD_DOT_DIR}/config  # if ln -s $CLOUD_DOT_DIR/.config $HOME then $CLOUD_CONFIG_HOME = $XDG_CONFIG_HOME
+    #export CLOUD_DATA_DIRS=''
+    #export CLOUD_CONFIG_DIRS=''
+    export CLOUD_CACHE_HOME=${CLOUD_DOT_DIR}/cache  # Do not symlink. so $CLOUD_CACHE_HOME != $XDG_CACHE_HOME
+fi
+
+# XDG Base Directory Specification に対応させてみる
+# ( Ubuntu フォルダー構造 その10 - XDG Base Directory Specificationについて - Ubuntu kledgeb,
+#   http://kledgeb.blogspot.jp/2013/04/ubuntu-10-xdg-base-directory.html )
+[[ -z $XDG_DATA_HOME ]] && export XDG_DATA_HOME=~/local/share  # Do not sync.
+#[[ -z $XDG_DATA_HOME ]] && export XDG_DATA_HOME=${CLOUD_DATA_HOME}
+#[[ -z $XDG_CONFIG_HOME ]] && export XDG_CONFIG_HOME=~/.config
+[[ -z $XDG_CONFIG_HOME ]] && export XDG_CONFIG_HOME=${CLOUD_CONFIG_HOME:-$HOME/.config}
+#[[ -z $XDG_DATA_DIRS ]] && export XDG_DATA_DIRS=/usr/local/share/:/usr/share/
+#[[ -z $XDG_DATA_DIRS ]] && export XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/
+#[[ -z $XDG_CONFIG_DIRS ]] && export XDG_CONFIG_DIRS=/etc/xdg
+#[[ -z $XDG_CONFIG_DIRS ]] && export XDG_CONFIG_DIRS=/etc/xdg
+#[[ -z $XDG_CONFIG_DIRS ]] && export XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+[[ -z $XDG_CACHE_HOME ]] && export XDG_CACHE_HOME=~/.cache  # Do not sync.
+#[[ -z $XDG_RUNTIME_DIR ]] && export XDG_RUNTIME_DIR=/tmp
+#[[ -z $XDG_RUNTIME_DIR ]] && export XDG_RUNTIME_DIR=/run/user/${USER}
+
+##
+# 設定フォルダ指定
+
+# ZSH
+#export ZDOTDIR=~/Dropbox/dotfiles/.zsh
+#export ZDOTDIR=~/Dropbox/dotfiles/.zprezto/runcoms
+#[[ -d ${CLOUD_CONFIG_HOME:-$XDG_CONFIG_HOME}/zsh ]] && export ZDOTDIR="${CLOUD_CONFIG_HOME:-$XDG_CONFIG_HOME}/zsh"
+
+# Vim
+#if [[ -d ${CLOUD_CONFIG_HOME}/vim ]]; then
+#    export VIMINIT='let $MYVIMRC="$CLOUD_CONFIG_HOME/vim/vimrc" | source $MYVIMRC'
+#    export VIMDOTDIR="${CLOUD_CONFIG_HOME}/vim"
+#fi
+
 # Ensure that a non-login, non-interactive shell has a defined environment.
 if [[ "$SHLVL" -eq 1 && ! -o LOGIN && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; then
+  #echo "Ensure that a non-login, non-interactive shell has a defined environment." >>! ~/set_zsh.txt
   source "${ZDOTDIR:-$HOME}/.zprofile"
+fi
+
+
+# ここから昔の .zshenv をインポート
+##################
+# /etc/zshenv # これを読み込むのは上書き不可
+#   # system-wide environment settings for zsh(1)
+#   if [ -x /usr/libexec/path_helper ]; then
+#           eval `/usr/libexec/path_helper -s`
+#   fi
+# ~/.zshenv
+# /etc/zprofile # ログインシェルの時
+# ~/.zprofile # ログインシェルの時
+# /etc/zshrc # 対話モードの時
+# ~/.zshrc # 対話モードの時
+# /etc/zlogin # ログインシェルの時
+# ~/.zlogin # ログインシェルの時
+
+##これは/etc/paths -> /etc/paths.d/0* -> /etc/paths.d/1* -> .. -> /etc/paths.d/Z*
+##の処理で自動的に読み込まれる
+
+##参考
+#1. /etc/profile
+# System-wide .profile for sh(1)
+#if [ -x /usr/libexec/path_helper ]; then
+# eval `/usr/libexec/path_helper -s`
+#fi
+#
+#if [ "${BASH-no}" != "no" ]; then
+# [ -r /etc/bashrc ] && . /etc/bashrc
+#fi
+#↓
+#2. /usr/libexec/path_helper
+#↓
+#3. /opt/local/etc/zshenv@ -> /etc/zshenv
+## system-wide environment settings for zsh(1)
+#if [ -x /usr/libexec/path_helper ]; then
+# eval `/usr/libexec/path_helper -s`
+#fi
+#↓
+#4. /opt/local/etc/zprofile
+
+#export LANG=ja_JP.UTF-8
+#export HOSTNAME=`/bin/hostname`
+
+# case "${OSTYPE}" in
+#   freebsd*|darwin*)
+#     # if [ -z "$HBASE_HOME" ]; then
+#     #     if [ -d ${HOME}/hbase-0.94.0 ]; then
+#     #      export HBASE_HOME=${HOME}/hbase-0.94.0
+#     #     elif [ -d ${HOME}/Sources/hbase-0.94.0 ]; then
+#     #      export HBASE_HOME=${HOME}/Sources/hbase-0.94.0
+#     #     fi
+#     # fi
+#     # if [ -z "$HBASE_HOME" ]; then
+#     #   if [ -d ${HOME}/Sources/l2base ]; then
+#     #     export HBASE_HOME=${HOME}/Sources/l2base
+#     #   fi
+#     # fi
+#     # HBASE_OPTS
+#     if [[ "$HBASE_OPTS" = "" ]]; then
+#       export HBASE_OPTS="-XX:+UseConcMarkSweepGC -Dfile.encoding=UTF-8 -Djava.security.krb5.realm=OX.AC.UK -Djava.security.krb5.kdc=kdc0.ox.ac.uk:kdc1.ox.ac.uk"
+#     fi
+#         if [[ "$HADOOP_OPTS" = "" ]]; then
+#             export HADOOP_OPTS="-Dfile.encoding=UTF-8 -Djava.security.krb5.realm=OX.AC.UK -Djava.security.krb5.kdc=kdc0.ox.ac.uk:kdc1.ox.ac.uk"
+#         fi
+#     ;;
+#   linux*|cygwin)
+#     if [ -z "$HADOOP_PREFIX" ]; then
+#       [ -d ${HOME}/hadoop-1.0.2 ] && export HADOOP_PREFIX=${HOME}/hadoop-1.0.2
+#       #[ -d ${HOME}/Sources/hadoop-1.0.2 ] && export HADOOP_PREFIX=${HOME}/Sources/hadoop-1.0.2
+#     fi
+#     # if [ -z "$HBASE_HOME" ]; then
+#     #   if [ -d ${HOME}/l2base ]; then
+#     #     export HBASE_HOME=${HOME}/l2base
+#     #   elif [ -d ${HOME}/l2base_takasan ]; then
+#     #     export HBASE_HOME=${HOME}/l2base_takasan
+#     #   elif [ -d ${HOME}/Sources/l2base_takasan ]; then
+#     #     export HBASE_HOME=${HOME}/Sources/l2base_takasan
+#     #   fi
+#     # fi
+#     # HBASE_OPTS
+#     if [[ "$HBASE_OPTS" = "" ]]; then
+#       export HBASE_OPTS="-XX:+UseConcMarkSweepGC -Dfile.encoding=UTF-8"
+#     fi
+#     ;;
+# esac
+
+# [ -d ${HOME}/hive-0.10.0 ] && export HIVE_HOME="${HOME}/hive-0.10.0"
+
+
+# メールアドレスの設定
+## ~/.zsh.d/email → ~/.emailの順に探して最初に見つかったファイルから読み込む。
+## (N-.): 存在しないファイルは登録しない。
+##    パス(...): ...という条件にマッチするパスのみ残す。
+##            N: NULL_GLOBオプションを設定。
+##               globがマッチしなかったり存在しないパスを無視する。
+##            -: シンボリックリンク先のパスを評価。
+##            .: 通常のファイルのみ残す。
+#email_files=(~/.zsh.d/email(N-.)
+#             ~/.email(N-.))
+#for email_file in ${email_files}; do
+#    export EMAIL=$(cat "$email_file")
+#    break
+#done
+
+## Maven Environments (2013-12-10)
+#if [[ -d /usr/local/apache-maven/ ]]; then
+#    export M3_HOME="/usr/local/apache-maven"
+#    export MAVEN_HOME="/usr/local/apache-maven"
+#    export M3="/usr/local/apache-maven/bin"
+#fi
+
+# To use Homebrew's directories rather than ~/.pyenv add to your profile:
+#export PYENV_ROOT=/usr/local/opt/pyenv
+
+##
+# virtualenv python environments
+#export PYTHONUSERBASE="~/Library/Python"  # default
+
+# The variable $PROJECT_HOME tells virtualenvwrapper where to place project working directories.
+# It must be set and the directory created before mkproject is used. Replace Developer with your projects directory.
+#export PROJECT_HOME="$HOME/Developer"
+
+# The variable $VIRTUALENVWRAPPER_VIRTUALENV_ARGS tells virtualenvwrapper what arguments to pass to virtualenv.
+# For example, set the value to --no-site-packages to ensure that all new environments are isolated from the system
+# site-packages directory.
+#export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--no-site-packages'
+
+if [[ "$ZVERVOSE_MODE" = true ]]; then
+    setopt >! ~/set_opts_2_zshenv.txt
+    functions >! ~/set_functions_2_zshenv.txt
+    export >! ~/set_exports_2_zshenv.txt
+    [[ ! -z $MANPATH ]] && echo "MANPATH=$MANPATH" >>! ~/set_exports_2_zshenv.txt
+    echo "fpath=$fpath" >>! ~/set_exports_2_zshenv.txt
+    echo ".zshenv loaded!" >>! ~/set_zsh.txt
 fi

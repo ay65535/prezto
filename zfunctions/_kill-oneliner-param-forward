@@ -1,0 +1,12 @@
+# コマンドライン上の可変パラメータ(%%HOGE)を置換
+local AT
+AT=$(echo ${RBUFFER} | awk -v marker="${ONELINER_PARAM_MARKER_PREFIX}" '{print index($0, marker)}')
+if [[ $AT -ne 0 ]]; then
+    CURSOR=$((CURSOR+AT-1))
+    for i in {1..${#ONELINER_PARAM_MARKER_PREFIX}}; do
+        zle delete-char-or-list
+    done
+    zle kill-word
+else
+    zle end-of-line
+fi

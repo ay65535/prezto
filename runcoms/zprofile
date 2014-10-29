@@ -5,6 +5,8 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+[[ "$ZVERVOSE_MODE" = true ]] && echo ".zprofile loading!" >>! ~/set_zsh.txt
+
 #
 # Browser
 #
@@ -17,16 +19,47 @@ fi
 # Editors
 #
 
-export EDITOR='nano'
-export VISUAL='nano'
+export EDITOR='vi'
+export VISUAL='vi'
 export PAGER='less'
 
 #
 # Language
 #
 
+#if [[ -z "$LANG" ]]; then
+#  export LANG='en_US.UTF-8'
+#fi
 if [[ -z "$LANG" ]]; then
-  export LANG='en_US.UTF-8'
+    case $TERM in
+        linux)  export LANG=C; LC_ALL=C ;;
+        *)      export LANG='ja_JP.UTF-8' ;;
+    esac
+fi
+
+#
+# ログインシェルの時にだけ呼び出される環境変数
+#
+
+# YADR 入れてるかどうか
+if [[ -d ~/Dropbox/yadr && -L ~/.yadr ]]; then
+    export YADR=~/Dropbox/yadr
+elif [[ -d ~/.yadr || -L ~/.yadr ]]; then
+    export YADR=~/.yadr
+else
+    #export YADR=""
+    #echo "yadr is not found"
+fi
+
+# prezto 入れてるかどうか
+#if [[ -d ~/Dropbox/yadr && -L ~/.yadr ]]; then
+if [[ ! -z "$YADR" ]]; then
+    export PREZTO=$YADR/zsh/prezto
+elif [[ -d ~/.zprezto || -L ~/.zprezto ]]; then
+    export PREZTO=~/.zprezto
+else
+    #export PREZTO=""
+    #echo "preztp is not found"
 fi
 
 #
@@ -34,7 +67,8 @@ fi
 #
 
 # Ensure path arrays do not contain duplicates.
-typeset -gU cdpath fpath mailpath path
+#typeset -gU cdpath fpath mailpath path
+typeset -gU fpath path
 
 # Set the the list of directories that cd searches.
 # cdpath=(
@@ -42,10 +76,348 @@ typeset -gU cdpath fpath mailpath path
 # )
 
 # Set the list of directories that Zsh searches for programs.
+# path=(
+#   /usr/local/{bin,sbin}
+#   $path
+# )
+
+##
+# パスの設定
+#typeset -U path fpath
+#   typeset
+#    -U 重複パスを登録しない
+#    -x exportも同時に行う
+#    -T 環境変数へ紐付け
+#
+#   path=xxxx(N-/)
+#     (N-/): 存在しないディレクトリは登録しない
+#     パス(...): ...という条件にマッチするパスのみ残す
+#        N: NULL_GLOBオプションを設定。
+#           globがマッチしなかったり存在しないパスを無視する
+#        -: シンボリックリンク先のパスを評価
+#        /: ディレクトリのみ残す
+#        .: 通常のファイルのみ残す
+
+# 基本的なパスの設定
 path=(
-  /usr/local/{bin,sbin}
-  $path
+    /usr/local/bin(N-/)    # Homebrew用
+    #/opt/local/bin(N-/)   # MacPorts用
+    /usr/bin(N-/)
+    /bin(N-/)
+    /usr/local/sbin(N-/)   # Homebrew用
+    #/opt/local/sbin(N-/)  # MacPorts用
+    /usr/sbin(N-/)
+    /sbin(N-/)
+    /opt/X11/bin(N-/)      # X11 / XQuartz
+    #/usr/X11/bin(N-/)     # OS X 10.8 からは /opt/X11/bin へのエイリアス
+    /usr/texbin(N-/)
+    #${HOME}/local/bin(N-/)  # 自分用（--prefix=$HOME/localでインストールしたもの）
+    ${HOME}/.local/bin(N-/)  # 自分用 (環境依存のバイナリなど)
+    ${HOME}/bin(N-/)         # スクリプト系 or 各アプリが勝手にインストールするもの
 )
+
+# JAVA_HOMEの設定
+if [[ -z "$JAVA_HOME" ]]; then
+    if [[ -x /usr/libexec/java_home ]]; then
+        export JAVA_HOME=`/usr/libexec/java_home`
+    #elif [[ -d /usr/lib/jvm/java-6-sun/jre ]]; then  # Ubuntu用
+    #    export JAVA_HOME=/usr/lib/jvm/java-6-sun/jre
+    fi
+fi
+
+# Java の文字化け対策(Mavenとかでの)
+#   (obsolete, java6まで。 see http://piyopiyoducky.net/blog/2013/04/13/java-system-properties-setting-and-character-encoding/)
+# && Hadoop / HBase で "Unable to load realm info from SCDynamicStore 抑止用"
+#case "${OSTYPE}" in
+#    freebsd*|darwin*)
+#        export MAVEN_OPTS="-XX:+UseConcMarkSweepGC -Dfile.encoding=UTF-8 -Djava.security.krb5.realm=OX.AC.UK -Djava.security.krb5.kdc=kdc0.ox.ac.uk:kdc1.ox.ac.uk"
+#        #export _JAVA_OPTIONS="-Dfile.encoding=UTF-8 -Djava.security.krb5.realm=OX.AC.UK -Djava.security.krb5.kdc=kdc0.ox.ac.uk:kdc1.ox.ac.uk"
+#        #export _JAVA_OPTIONS=""
+#        ;;
+#    linux*|cygwin)
+#        export MAVEN_OPTS="-Dfile.encoding=UTF-8"
+#        #export _JAVA_OPTIONS="-Dfile.encoding=UTF-8"
+#        ;;
+#esac
+
+# ANDROID_HOMEの設定 (ANDROID_HOME環境変数は不要？)
+# ( http://www.hlplus.jp/php/blog/index.php?UID=1302358652 )
+if [[ "$OSTYPE" == darwin* ]]; then
+    #ROOT_PREFIX=`find /Volumes -maxdepth 1 -type l`
+    if [[ "$HOST" == "iMac.local" ]]; then
+        ROOT_PREFIX=''
+    else
+        ROOT_PREFIX=/Volumes/OS\ X
+    fi
+    if ANDROID_HOME=`dirname ${ROOT_PREFIX}/opt/homebrew-cask/Caskroom/android-studio*/*/Android\ Studio.app/sdk 2>/dev/null`'/sdk'; then
+        export ANDROID_HOME
+        path=($path
+            ${ANDROID_HOME}/tools(N-/)
+            ${ANDROID_HOME}/platform-tools(N-/))
+    elif ANDROID_HOME=`dirname /Applications/android-sdk-macosx 2>/dev/null`'/android-sdk-macosx'; then
+        export ANDROID_HOME
+        path=($path
+            ${ANDROID_HOME}/tools(N-/)
+            ${ANDROID_HOME}/platform-tools(N-/))
+    else
+        unset ANDROID_HOME
+    fi
+fi
+
+# GRADLE_HOMEの設定 (obsolete, 下記のGVMの設定で設定される？)
+if [[ -z "$GRADLE_HOME" ]]; then
+    [[ -d /usr/local/Cellar/groovy ]] && export GROOVY_HOME=/usr/local/opt/groovy/libexec
+fi
+
+# GRADLE_HOMEの設定 (obsolete, 下記のGVMの設定で設定される)
+if [[ -z "$GRADLE_HOME" ]]; then
+    [[ -d /usr/local/Cellar/gradle ]] && export GRADLE_HOME=/usr/local/opt/gradle/libexec
+fi
+
+# GVM (http://gvmtool.net/) の設定
+# .zshrcの末尾に追加した。
+
+# Mac(homebrew)でGoのインストールと、Emacsの環境構築 - ありの日記
+# http://d.hatena.ne.jp/hiro_nemu/20140113/1389620004
+# Goの環境変数設定
+if which go >/dev/null; then
+    export GOROOT=`go env GOROOT`
+    #export GOROOT=/usr/local/opt/go/libexec
+    # ghqを使ったローカルリポジトリの統一的・効率的な管理について - delirious thoughts
+    # http://blog.kentarok.org/entry/2014/06/03/135300
+    export GOPATH=$HOME/local
+    #export GOPATH=$HOME/.go
+    #export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+    path=($path
+        $GOROOT/bin(N-/)
+        $GOPATH/bin(N-/))
+fi
+
+# Perl の設定 (brw install plenv の場合) (2014-07-04 added)
+# ( http://blog.sotm.jp/2014/01/09/Installing-pyenv-virtualenv-rbenv-gemse-plenv-pmset-on-MacOSX-109/#perlplenv )
+if which plenv > /dev/null; then
+    #export PLENV_ROOT="~/.plenv"  # default
+    #export PATH=${PLENV_ROOT}/shims:${PATH}  # パスはplenv initで自動的に通されるみたい
+    #path=(${PLENV_ROOT}/shims(N-/) $path)
+    #eval "$(plenv init -)"
+    eval "$(plenv init - zsh)"  # zshでは引数が必要？
+fi
+
+# Rubyの設定
+# ライブラリのロードパス
+## -x: export RUBYLIBも一緒に行う。
+## -T: RUBYLIBとruby_pathを連動する。
+#typeset -xT RUBYLIB ruby_path
+## 重複したパスを登録しない。
+#typeset -U ruby_path
+## パスを設定
+#ruby_path=(# カレントディレクトリのライブラリを優先する
+#           ./lib)
+# Rubyの設定 (brew install rbenv)
+# To use Homebrew's directories rather than ~/.rbenv add to your profile:
+#export RBENV_ROOT=/usr/local/var/rbenv
+# To enable shims and autocompletion add to your profile:
+if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi
+# preztoのrubyモジュール有効化してたら自動でこれされる
+
+# diff-highlightへのパス
+path=(
+    $path
+    /usr/share/doc/git/contrib/diff-highlight(N-/)
+    )
+
+
+# fontconfigの設定 (どっから来たか不明)
+test -d ${HOME}/.config/fontconfig && export FONTCONFIG_PATH=${HOME}/.config/fontconfig
+
+# その他path
+#path=(
+    # plenv from homebrew用
+    #${PLENV_ROOT}/shims(N-/)
+    # 自分用（gem install --user-installでインストールしたもの）
+    ## 2012-01-07
+    #$HOME/.gem/ruby/*/bin(N-/)
+    # Debian GNU/Linux用
+    #/var/lib/gems/*/bin(N-/)
+    # Solaris用
+    #/opt/csw/bin(N-/)
+    #/usr/sfw/bin(N-/)
+    # Cygwin用
+    #/cygdrive/c/meadow/bin(N-/)
+    # from RAINBOW-PC
+    #/cygdrive/c/MSC.Software/Patran/bin(N-/)
+    #/cygdrive/c/Program\ Files/Embarcadero/RAD\ Studio/8.0/bin(N-/)
+    #/cygdrive/c/Users/Public/Documents/RAD\ Studio/8.0/Bpl(N-/)
+    #/cygdrive/c/Program\ Files/AZ-Prolog.650/bin(N-/)
+    #/cygdrive/c/Program\ Files/Symyx/Symyx\ Draw\ 4.0/lib(N-/)
+    #/cygdrive/c/Perl/site/bin(N-/)
+    #/cygdrive/c/Perl/bin(N-/)
+    #'/cygdrive/c/Program Files/Common Files/Microsoft Shared/Windows Live'(N-/)
+    #/cygdrive/c/Windows/system32(N-/)
+    #/cygdrive/c/Windows(N-/)
+    #/cygdrive/c/Windows/System32/Wbem(N-/)
+    #/cygdrive/c/Windows/System32/WindowsPowerShell/v1.0(N-/)
+    #'/cygdrive/c/Program Files/Java/jre7/bin'(N-/)
+    #'/cygdrive/c/Program Files/Java/jdk1.7.0_03/bin'(N-/)
+    #'/cygdrive/c/Program Files/Java/jre6/bin'(N-/)
+    #/cygdrive/c/Program\ Files/Java/jdk1.6.0_31/bin(N-/)
+    #/cygdrive/c/Program\ Files/Common\ Files/TTKN/Bin(N-/)
+    #/cygdrive/c/Program\ Files/gnuplot/binary(N-/)
+    #/cygdrive/c/w32tex/bin(N-/)
+    #/cygdrive/c/gs/gs9.04/bin(N-/)
+    #/cygdrive/c/gs/gs9.04/lib(N-/)
+    #/cygdrive/c/gs/gs9.05/bin(N-/)
+    #/cygdrive/c/gs/gs9.05/lib(N-/)
+    #/cygdrive/c/Program\ Files/MATLAB/R2010b/bin(N-/)
+    #/cygdrive/c/Program\ Files/Autodesk/Backburner/(N-/)
+    #/cygdrive/c/Program\ Files/Common\ Files/Autodesk\ Shared/(N-/)
+    #/cygdrive/c/MSC.Software/Marc/2010/marc2010/bin(N-/)
+    #/cygdrive/c/MSC.Software/Marc/2010/marc2010/tools(N-/)
+    #/cygdrive/c/MSC.Software/Marc/2010/mentat2010/bin(N-/)
+    #/cygdrive/c/Program\ Files/QuickTime/QTSystem/(N-/)
+    #/usr/lib/lapack(N-/)
+    # Ubuntu 12.04 用
+    #/usr/lib/lightdm/lightdm(N-/)
+    #/usr/games(N-/)
+    #/var/lib/gems/1.8/bin(N-/) # exp-www用
+    # Android SDK 用
+    #/Applications/adt-bundle-mac-x86_64-20130219/sdk/tools(N-/)
+    #/Applications/adt-bundle-mac-x86_64-20130219/sdk/platform-tools(N-/)
+    # Hadoop / HBase 用
+    #${HOME}/hadoop/bin(N-/)
+    #${HOME}/hbase/bin(N-/)
+    # Hadoop / HBase / Hive / L2base 用
+    #${HADOOP_PREFIX}/bin(N-/)
+    #${HBASE_HOME}/bin(N-/)
+    #${HIVE_HOME}/bin(N-/)
+    # dmg版MySQLインストール用
+    #/usr/local/mysql/bin(N-/)
+    # Maven 3 インストール用 (http://www.arcenserv.info/archives/4704/)
+    #/usr/local/apache-maven/apache-maven/bin(N-/)
+    #/usr/local/apache-maven/bin(N-/)
+    ### Added by the Heroku Toolbelt
+    #/usr/local/heroku/bin(N-/)
+    # Gradle (from Homebrew)
+    #${GRADLE_HOME}/bin(N-/)
+#)
+
+# HomebrewでインストールしたPython用 (obsolete:下記参照)
+#/usr/local/share/python(N-/)
+#   Warning: /usr/local/share/python is not needed in PATH.
+#   Formerly homebrew put Python scripts you installed via `pip` or `pip3`
+#   (or `easy_install`) into that directory above but now it can be removed
+#   from your PATH variable.
+#   Python scripts will now install into /usr/local/bin.
+#   You can delete anything, except 'Extras', from the /usr/local/share/python
+#   (and /usr/local/share/python3) dir and install affected Python packages
+#   anew with `pip install --upgrade`.
+
+# sudo時のパスの設定
+## -x: export SUDO_PATHも一緒に行う。
+## -T: SUDO_PATHとsudo_pathを連動する。
+#typeset -xT SUDO_PATH sudo_path
+## 重複したパスを登録しない。
+#typeset -U sudo_path
+## (N-/): 存在しないディレクトリは登録しない。
+##    パス(...): ...という条件にマッチするパスのみ残す。
+##            N: NULL_GLOBオプションを設定。
+##               globがマッチしなかったり存在しないパスを無視する。
+##            -: シンボリックリンク先のパスを評価。
+##            /: ディレクトリのみ残す。
+#sudo_path=({,/usr/pkg,/usr/local,/usr}/sbin(N-/))
+
+# man用パスの設定
+## 重複したパスを登録しない。
+typeset -U manpath
+## (N-/) 存在しないディレクトリは登録しない。
+##    パス(...): ...という条件にマッチするパスのみ残す。
+##            N: NULL_GLOBオプションを設定。
+##               globがマッチしなかったり存在しないパスを無視する。
+##            -: シンボリックリンク先のパスを評価。
+##            /: ディレクトリのみ残す。
+manpath=(
+    # 自分用
+    #$HOME/local/share/man(N-/)
+    # Homebrew用
+    /usr/local/share/man(N-/)
+    # MacPorts用
+    #/opt/local/share/man(N-/)
+    # システム用
+    /usr/share/man(N-/)
+    # X11 / XQuartz
+    /opt/X11/share/man(N-/)
+    #/usr/X11/share/man(N-/)
+    # MacTeX / BasicTeX / texlive
+    /Library/TeX/Distributions/.DefaultTeX/Contents/Man(N-/)
+    #/usr/local/texlive/2014/texmf-dist/doc/man(N-/)
+    #/usr/local/texlive/2013/texmf-dist/doc/man(N-/)
+    # Solaris用
+    #/opt/csw/share/man(N-/)
+    #/usr/sfw/share/man(N-/)
+    # coreutils 用 (from Homebrew)
+    /usr/local/opt/coreutils/libexec/gnuman(N-/)
+)
+
+# fpathの設定
+
+CONFIG_PATH=${CLOUD_CONFIG_HOME:-${XDG_CONFIG_HOME:-$HOME/.config}}
+fpath=(
+    #/usr/local/share/zsh/site-functions(N-/)  # preztoのzsh-completionsよりもHomebrewのやつを優先
+    #/usr/local/Cellar/zsh/5.0.6/share/zsh/functions(N-/)  # preztoのzsh-completionsよりもHomebrewのやつを優先
+    ${fpath}  # preztoのmoduleに必要 (無いとprezto/init.zshでエラー発生)
+    /usr/local/share/zsh-completions(N-/)
+    ${PREZTO:-$HOME/.zprezto}/zcompfunc(N-/)
+    ${PREZTO:-$HOME/.zprezto}/zfunctions(N-/)
+    ${PREZTO:-$HOME/.zprezto}/zprompts(N-/)
+    ${CONFIG_PATH}/zsh/prezto/zcompfunc(N-/)
+    ${CONFIG_PATH}/zsh/prezto/zfunctions(N-/)
+    ${CONFIG_PATH}/zsh/prezto-themes(N-/)  # YADRのプロンプトテーマも取り込む
+    ${CONFIG_PATH}/zsh/prezto/zcompfunc(N-/)
+    ${CONFIG_PATH}/zsh/prezto/zfunctions(N-/)
+    ${CONFIG_PATH}/zsh/zcompfunc(N-/)
+    ${CONFIG_PATH}/zsh/zfunctions(N-/)
+    ${CONFIG_PATH}/zsh/zprompts(N-/)
+    ${XDG_CACHE_HOME}/zsh/zcompfunc(N-/)  # for symlink
+    ${ZDOTDIR:-$HOME/.zsh}/functions(N-/)
+    ${ZDOTDIR:-$HOME/.zsh}/zcompfunc(N-/)
+    ${ZDOTDIR:-$HOME/.zsh}/zfunctions(N-/)
+    ${ZDOTDIR:-$HOME/.zsh}/zprompts(N-/)
+    ${ZDOTDIR:-$HOME}/.compfunc(N-/)
+    ${ZDOTDIR:-$HOME}/.zcompfunc(N-/)
+    ${ZDOTDIR:-$HOME}/compfunc(N-/)
+)
+
+# Pythonの設定
+## ライブラリのロードパス
+### -x: export PYTHONPATHも一緒に行う。
+### -T: PYTHONPATHとpython_pathを連動する。
+#typeset -xT PYTHONPATH pyhon_path
+### 重複したパスを登録しない。
+#typeset -U python_path
+### パスを設定。
+#python_path=(# カレントディレクトリのライブラリを優先する
+#             ./lib)
+
+# pkg-configの設定
+## .pcのロードパス
+### -x: export PKG_CONFIG_PATHも一緒に行う。
+### -T: PKG_CONFIG_PATHとpkg_config_pathを連動する。
+#typeset -xT PKG_CONFIG_PATH pkg_config_path
+### 重複したパスを登録しない。
+#typeset -U pkg_config_path
+### パスを設定。
+### (N-/) 存在しないディレクトリは登録しない。
+###    パス(...): ...という条件にマッチするパスのみ残す。
+###            N: NULL_GLOBオプションを設定。
+###               globがマッチしなかったり存在しないパスを無視する。
+###            -: シンボリックリンク先のパスを評価。
+###            /: ディレクトリのみ残す。
+#pkg_config_path=(# 自分用
+#                 $HOME/local/lib/pkgconfig(N-/)
+#                 # MacPorts用
+#                 /opt/local/lib/pkgconfig(N-/))
+
+#[[ -x /usr/local/share/git-core/contrib/diff-highlight/diff-highlight && ! -x /usr/local/bin/diff-highlight ]] && ln -s /usr/local/share/git-core/contrib/diff-highlight/diff-highlight /usr/local/bin/diff-highlight
 
 #
 # Less
@@ -55,12 +427,34 @@ path=(
 # Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
 # Remove -X and -F (exit if the content fits on one screen) to enable it.
 export LESS='-F -g -i -M -R -S -w -X -z-4'
+#export LESS='-g -i -M -R -S -w -z-4'
+export LV="-l -c"
 
 # Set the Less input preprocessor.
 # Try both `lesspipe` and `lesspipe.sh` as either might exist on a system.
 if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
+
+# ページャの設定
+# if type lv > /dev/null 2>&1; then
+#     # lvを優先する。
+#     export PAGER="lv"
+# else
+#     # lvがなかったらlessを使う。
+#     export PAGER="less"
+# fi
+
+# lvの設定
+# if [ "$PAGER" = "lv" ]; then
+#     # -c: ANSIエスケープシーケンスの色付けなどを有効にする。
+#     # -l: 1行が長くと折り返されていても1行として扱う。
+#     #     （コピーしたときに余計な改行を入れない。）
+#     export LV="-c -l"
+# else
+#     # lvがなくてもlvでページャーを起動する。
+#     alias lv="$PAGER"
+# fi
 
 #
 # Temporary Files
@@ -72,3 +466,15 @@ if [[ ! -d "$TMPDIR" ]]; then
 fi
 
 TMPPREFIX="${TMPDIR%/}/zsh"
+if [[ ! -d "$TMPPREFIX" ]]; then
+  mkdir -p "$TMPPREFIX"
+fi
+
+if [[ "$ZVERVOSE_MODE" = true ]]; then
+    setopt >! ~/set_opts_3_zprofile.txt
+    functions >! ~/set_functions_3_zprofile.txt
+    export >! ~/set_exports_3_zprofile.txt
+    echo "MANPATH=$MANPATH" >>! ~/set_exports_3_zprofile.txt
+    echo "fpath=$fpath" >>! ~/set_exports_3_zprofile.txt
+    echo ".zprofile loaded!" >>! ~/set_zsh.txt
+fi

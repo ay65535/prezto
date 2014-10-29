@@ -5,6 +5,8 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+[[ "$ZVERVOSE_MODE" = true ]] && echo ".zpreztorc loading!" >>! ~/set_zsh.txt
+
 #
 # General
 #
@@ -32,6 +34,10 @@ zstyle ':prezto:load' pmodule \
   'spectrum' \
   'utility' \
   'completion' \
+  'homebrew' \
+  'ruby' \
+  'python' \
+  'syntax-highlighting' \
   'prompt'
 
 #
@@ -92,7 +98,13 @@ zstyle ':prezto:module:editor' key-bindings 'emacs'
 # Set the prompt theme to load.
 # Setting it to 'random' loads a random theme.
 # Auto set to 'off' on dumb terminals.
-zstyle ':prezto:module:prompt' theme 'sorin'
+if [[ "$HOST" == iMac* ]]; then
+	zstyle ':prezto:module:prompt' theme 'sorin'
+elif [[ "$HOST" == MacBook* ]]; then
+  zstyle ':prezto:module:prompt' theme 'skwp_mod'
+else
+  zstyle ':prezto:module:prompt' theme 'steeef_modified'
+fi
 
 #
 # Ruby
@@ -157,9 +169,19 @@ zstyle ':prezto:module:prompt' theme 'sorin'
 
 # Auto start a session when Zsh is launched in a local terminal.
 # zstyle ':prezto:module:tmux:auto-start' local 'yes'
+#[ "$HOST" = "iMac.local" ] && zstyle ':prezto:module:tmux:auto-start' local 'yes'
 
 # Auto start a session when Zsh is launched in a SSH connection.
 # zstyle ':prezto:module:tmux:auto-start' remote 'yes'
 
 # Integrate with iTerm2.
 # zstyle ':prezto:module:tmux:iterm' integrate 'yes'
+
+if [[ "$ZVERVOSE_MODE" = true ]]; then
+  setopt >! ~/set_opts_4_zpreztorc.txt
+  functions >! ~/set_functions_4_zpreztorc.txt
+  export >! ~/set_exports_4_zpreztorc.txt
+  echo "MANPATH=$MANPATH" >>! ~/set_exports_4_zpreztorc.txt
+  echo "fpath=$fpath" >>! ~/set_exports_4_zpreztorc.txt
+  echo ".zpreztorc loaded!" >>! ~/set_zsh.txt
+fi

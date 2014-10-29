@@ -5,9 +5,581 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+[[ "$ZVERVOSE_MODE" = true ]] && echo ".zshrc loading!" >>! ~/set_zsh.txt
+
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
 # Customize to your needs...
+
+if [[ -d ~/.yadr ]]; then
+  # from YADR
+  for config_file ($HOME/.yadr/zsh/*.zsh) source $config_file
+fi
+
+#!/usr/bin/env zsh
+########################################################
+##### from tsushima kun
+
+# ショートカットキー
+#C-r    履歴から検索
+#Esc-h  man呼び出し
+#Esc-q  現在入力中の文字列を退避
+#C-a    先頭に移動
+#C-e    末尾に移動
+#C-k    カーソルから末尾まで削除
+#C-w    カーソルから行頭まで削除
+#Esc-?  コマンドのパスを表示
+#C-l    クリア
+#M-up   上のディレクトリ
+#M-left 戻る
+
+
+##########
+# setopt #
+##########
+
+# 履歴ファイルに時刻を記録
+# (これ有効化するとDropbox同期で競合発生しやすいかも?
+#setopt extended_history
+#setopt hist_ignore_all_dups   # 履歴全体で同じコマンドを重複して記録しない
+#setopt hist_ignore_dups       # 直前と同じコマンドをヒストリに追加しない
+#setopt hist_expire_dups_first # 重複を優先して削除
+#setopt hist_save_no_dups      # 重複コマンドを保存しない
+# スペースで始まる場合はヒストリに追加しない
+#setopt hist_ignore_space
+# すぐにヒストリファイルに追記する
+#setopt inc_append_history
+# zshプロセス間でヒストリを共有する
+#setopt share_history
+# 移動履歴をプッシュ(cd -[Tab]
+#setopt auto_pushd
+# 移動履歴をキューではなくスタックで番号付け(最近居た場所が上になる)
+setopt pushd_minus
+# 移動履歴の重複禁止
+#setopt PUSHD_IGNORE_DUPS
+# command not foundの時にはインストール方法を提示
+#source /etc/zsh_command_not_found
+# Ctrl-dでログアウトしない
+setopt ignore_eof
+# 自動cd(cdなしでおｋ)
+#setopt auto_cd
+# コマンド修正提示
+#setopt correct     #通常
+#setopt correct_all #ファイル名まで考慮
+#補完候補が複数ある時に、一覧表示する
+#setopt auto_list
+#タブキー連打で補完候補を順に表示
+#setopt auto_menu
+# 補完候補が複数ある時、一覧表示 (auto_list) せず、すぐに最初の候補を補完する
+setopt menu_complete
+#補完候補一覧でファイルの種別を識別マーク表示(ls -F の記号)
+#setopt list_types
+#'='以降でも補完できるようにする( --prefix=/usr 等の場合)
+##setopt magic_equal_subst
+#補完される前にオリジナルのコマンドまで展開してチェックする
+##setopt complete_aliases
+# カッコの対応などを自動的に補完
+#setopt auto_param_keys
+#末尾の/を消去しない
+#setopt noautoremoveslash
+#出力の文字列末尾に改行コードが無い場合でも表示
+#unsetopt promptcr
+# 補完時に濁点・半濁点を<3099>、<309a>のようにさせない
+#setopt combining_chars
+#ビープ音ならなさない
+setopt nobeep
+#改行のない出力をプロンプトで上書きするのを防ぐ
+#unsetopt promptcr
+# rm * を実行する前に確認される。
+setopt rmstar_wait
+# エスケープシーケンスを使う。
+# (プロンプトに$HOSTとか$UIDとかいった類のものが使用出来るようになる。)
+#setopt prompt_subst
+
+################
+### 環境変数 ###
+################
+
+# LS COLORS
+# prezto default is 'exfxcxdxbxGxDxabagacad'
+#export LSCOLORS='GxFxCxdxBxegedabagacad'
+# prezto default is 'di=34:ln=35:so=32:pi=33:ex=31:bd=36;01:cd=33;01:su=31;40;07:sg=36;40;07:tw=32;40;07:ow=33;40;07:'
+#export LS_COLORS='di=01;36:ln=01;35:so=01;32:ex=01;31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
+
+# Homebrew API Token (2014-06-27)
+if [ -f ~/.brew_api_token ]; then
+  source ~/.brew_api_token
+fi
+
+# MySQL history file
+export MYSQL_HISTFILE=${CLOUD_CACHE_HOME}/mysql/mysql_history
+
+##################
+### シェル変数 ###
+##################
+
+# 履歴の保存先
+if [[ -d ${CLOUD_CACHE_HOME}/zsh ]]; then
+    HISTFILE=${CLOUD_CACHE_HOME}/zsh/zhistory
+#elif [[ -d ${XDG_CACHE_HOME}/zsh ]]; then
+#    HISTFILE=${XDG_CACHE_HOME}/zsh/zhistory
+#elif [[ -e "${ZDOTDIR:-$HOME}"/.zsh_history ]]; then
+#    HISTFILE="${ZDOTDIR:-$HOME}"/.zsh_history
+#elif [[ -d ${CLOUD_DOT_DIR}/.zsh ]]; then
+#    HISTFILE=${CLOUD_DOT_DIR}/.zsh/.zsh_history
+#elif [[ -d ~/Dropbox/dotfiles/.zsh ]]; then
+#    HISTFILE=~/Dropbox/dotfiles/.zsh/.zsh_history
+#elif [[ -d ~/Copy/dotfiles/.zsh ]]; then
+#    HISTFILE=~/Copy/dotfiles/.zsh/.zsh_history
+#elif [[ -d ~/GoogleDrive/dotfiles/.zsh ]]; then
+#    HISTFILE=~/GoogleDrive/dotfiles/.zsh/zsh_history
+#elif [[ -d ~/GoogleDrive/profiles/.zsh/ ]]; then
+#    HISTFILE=~/GoogleDrive/profiles/.zsh/zsh_history
+#elif [[ -d ~/Google\ Drive/profiles/.zsh/ ]]; then
+#    HISTFILE=~/Google\ Drive/profiles/.zsh/zsh_history
+#elif [[ -d ~/Google\ Drive/profiles/.zsh && $DOMAINNAME != "ed.ritsumei.ac.jp" ]]; then
+#    HISTFILE=~/Google\ Drive/profiles/.zsh/zsh_history
+# elif [[ -d ~/Dropbox/PrivateShare/profiles/.zsh && $DOMAINNAME != "ed.ritsumei.ac.jp" ]]; then
+#     HISTFILE=~/Dropbox/PrivateShare/profiles/.zsh/zsh_history
+# elif [[ -d ~/Dropbox/Shared/profiles/.zsh && $DOMAINNAME != "ed.ritsumei.ac.jp" ]]; then
+#     HISTFILE=~/Dropbox/Shared/profiles/.zsh/zsh_history
+# elif [[ -d ~ats/Dropbox/Shared/profiles/.zsh && $DOMAINNAME != "ed.ritsumei.ac.jp" ]]; then
+#     HISTFILE=~ats/Dropbox/Shared/profiles/.zsh/zsh_history
+else
+    HISTFILE=~/.zsh_history
+fi
+## メモリに展開する履歴の数
+HISTSIZE=18000
+## 保存する履歴の数
+SAVEHIST=15000
+
+#「/」も単語区切りとみなす。
+WORDCHARS=${WORDCHARS:s,/,,}
+
+# fpathの設定
+## 最初の ${fpath} はpreztoのmoduleに必要
+fpath=(
+    /usr/local/share/zsh/site-functions(N-/)  # preztoのzsh-completionsよりもHomebrewのやつを優先
+    /usr/local/Cellar/zsh/5.0.6/share/zsh/functions(N-/)  # preztoのzsh-completionsよりもHomebrewのやつを優先
+    #/usr/local/share/zsh/functions(N-/)
+    ${fpath}
+)
+
+#############
+## aliases ##
+#############
+
+# 拡張子に応じたコマンド実行
+#alias -s py=python3
+
+# exit
+alias q=exit
+alias ｑ=exit
+
+alias sudo='sudo ' # sudo時もこのzshrcを読むようにする
+
+# ls
+case "${OSTYPE}" in
+freebsd*|darwin*)
+    alias ls='ls -FG'
+    alias gls="gls -F --color=auto" # coreutilsのGNU ls 使う場合
+    ;;
+linux*|cygwin)
+    alias ls="ls -F --color=auto"
+    ;;
+esac
+alias la='ls -A'
+alias lla='ll -a'
+alias ｌｓ="ls"
+function l. () { ls -d $@ .* }
+function ll. () { ll -d $@ .* }
+
+# Clean up LaunchServices to remove duplicates in the “Open With” menu
+alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
+
+# rm
+if [ -x /usr/local/bin/trash ]; then
+    alias rm="trash"
+elif [ -x ~/bin/mv2trash ]; then
+    alias rm="mv2trash"
+else
+    alias rm='nocorrect rm -i'
+fi
+
+alias which="which -a"
+alias ln='nocorrect ln -i -v'
+
+alias rsyncmac="rsync --exclude='.DS_Store'"
+
+# emacs
+if [ -d /usr/local/Cellar/emacs ]; then
+    alias em='open -a Emacs'
+    alias enw='/usr/local/bin/emacs -nw'
+    alias emacs='/usr/bin/emacs -nw'
+# elif [ -d /Applications/MacPorts/Emacs.app ]; then
+#   alias em='open -a /Applications/MacPorts/Emacs.app'
+#   alias enw='/Applications/MacPorts/Emacs.app/Contents/MacOS/Emacs -nw'
+#   #alias emacs='/usr/bin/emacs -nw'
+else
+    alias enw='emacs -nw'
+fi
+
+# sublime
+alias s=subl
+
+# Homebrew (preztoで定義されているもの以外)
+alias brewi='brew info'
+alias brewo='brew options'
+alias brewI='brew install'
+alias brewd='brew doctor'
+alias brewUd='brew update && brew upgrade && brew doctor'
+alias brewcd='brew cask doctor'
+alias brewch='brew cask home'
+alias brewci='brew cask info'
+alias brewcI='brew cask install'
+alias brewcs='brew cask search'
+
+# git hub
+alias hubb='hub browse'
+
+# Python / pip
+alias pipu='pip install --user --install-option="--prefix="'
+alias pip3u='pip3 install --user --install-option="--prefix="'
+
+# screen
+alias screen='screen -U' # utfモードで起動
+#set meta-flag on
+#set input-meta on
+#set output-meta on
+#set convert-meta off
+# シェル起動時にscreenにアタッチ
+#screen -xR
+
+alias updatedb='sudo /usr/libexec/locate.updatedb'
+
+# javaの文字化け対策 (obsolete？)
+#alias java='java -Dfile.encoding=UTF-8'
+#alias javac='javac -J-Dfile.encoding=UTF-8'
+#alias jar='jar -J-Dfile.encoding=UTF-8'
+
+# tex関係
+alias xbb=extractbb
+alias jbibtex="pbibtex" # 互換性確保のためjbibtexでも通るように
+
+
+############
+### 関数 ###
+############
+
+zshaddhistory() {
+    # http://www.pyon.net/2014/02/01/index.html
+    unsetopt sh_word_split # sh_word_splitが有効だとエラーになる。
+    local line=${1%%$'\n'}
+    local cmd=${line%% *}
+
+    # 以下の条件をすべて満たすものだけをヒストリに追加する
+    [[ ${#line} -ge 3
+        #&& ${cmd} != l[sal]
+        && ${cmd} != cd
+        #&& ${cmd} != (m|man)
+        #&& ${line} != "dropbox.py start"
+        #&& ${line} != "dropbox.py status"
+        && ${line} != pwd
+    ]]
+}
+
+# 全履歴の一覧を出力する
+autoload -Uz history-all
+
+# vim のバックアップ
+mvim --version > /dev/null 2>&1
+export MACVIM_INSTALLED=$?
+autoload -Uz vim
+
+# brew options && brew info
+autoload -Uz brewoi
+
+# Get OS X Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
+autoload -Uz update
+
+##
+# $fpathのどこかにある zcompfunc_local.txt の内容を読み取って、
+# $src から $dst へのシンボリックリンクを作成する
+autoload -Uz symlink-zfuncs
+
+# gitでhubを呼ぶ
+# ( GitHubユーザーのためのhubコマンド - Qiita,
+#   http://qiita.com/yaotti/items/a4a7f3f9a38d7d3415e3#2-1 )
+# ※プロンプト1回毎にgitコマンドが2回呼ばれてるっぽいので
+#   置き換えるとプロンプト表示が重くなる
+#function git(){hub "$@"}
+
+#
+# peco / percol
+#
+
+## どちらを使うか
+if which peco >/dev/null 2>&1; then
+    export PERCOL=peco  # (percol|peco)
+elif which percol 2>/dev/null; then
+    export PERCOL=percol  # (percol|peco)
+fi
+
+###
+# prep (& peco)
+# https://github.com/mooz/percol#interactive-pgrep--pkill
+#function ppgrep() {
+#    if [[ $1 == "" ]]; then
+#        PERCOL2=$PERCOL
+#    else
+#        PERCOL2="PERCOL --query $1"
+#    fi
+#    ps aux | eval $PERCOL2 | awk '{ print $2 }'
+#}
+
+#function ppkill() {
+#    if [[ $1 =~ "^-" ]]; then
+#        QUERY=""            # options only
+#    else
+#        QUERY=$1            # with a query
+#        [[ $# > 0 ]] && shift
+#    fi
+#    ppgrep $QUERY | xargs kill $*
+#}
+
+function exists { which $1 &> /dev/null }
+
+if exists $PERCOL; then
+    ##
+    # Pecoを導入してzshのhistoryに使うようにした
+    # http://blog.kenjiskywalker.org/blog/2014/06/12/peco/
+    autoload -Uz peco-select-history
+    zle -N peco-select-history
+    bindkey '^r' peco-select-history
+
+    # pecoで履歴からマッチするキーワードをその場に補完
+    # ( https://gist.github.com/anonymous/19bbb1eadf4f1c6bd761 )
+    autoload -Uz in_place_history_keyword_completion
+    zle -N in_place_history_keyword_completion
+    bindkey '^X^I' in_place_history_keyword_completion
+
+    # peco/percolでCUIなスニペットツールを作ってみる
+    # ( http://blog.glidenote.com/blog/2014/06/26/snippets-peco-percol/ )
+    autoload -Uz peco-snippets
+    zle -N peco-snippets
+    bindkey '^x^s' peco-snippets
+
+    # zshでcdの履歴管理に標準添付のcdrを使う ( http://blog.n-z.jp/blog/2013-11-12-zsh-cdr.html )
+    if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
+        autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+        add-zsh-hook chpwd chpwd_recent_dirs
+        zstyle ':completion:*:*:cdr:*:*' menu selection
+        zstyle ':completion:*' recent-dirs-insert both
+        zstyle ':chpwd:*' recent-dirs-max 500
+        zstyle ':chpwd:*' recent-dirs-default true
+        zstyle ':chpwd:*' recent-dirs-file "${XDG_CACHE_HOME:-$HOME/.cache}/shell/chpwd-recent-dirs-${HOST%%.*}"
+        zstyle ':chpwd:*' recent-dirs-pushd true
+        #zstyle ':chpwd:*' recent-dirs-prune 'GDCx'
+        #zstyle ':chpwd:*' recent-dirs-prune '/tmp(|/*)'
+    fi
+
+    # 最近訪れたディレクトリにpecoで行けるようにするやつ。cdr -l使うと便利にできる。
+    # ( http://shibayu36.hatenablog.com/entry/2014/06/27/223538 )
+    autoload -Uz peco-cdr
+    zle -N peco-cdr
+    bindkey '^@' peco-cdr
+
+    # zshとpecoでワンライナー呼び出し
+    # http://qiita.com/jpshadowapps/items/4c6795f2e67fdedbabf0
+    ONELINER_DIR=${CLOUD_DATA_HOME:-${XDG_DATA_HOME:-$HOME}}
+    ONELINER_TXT=${ONELINER_DIR}/snippets
+    ONELINER_PARAM_MARKER_PREFIX="%%"
+    # ワンライナー登録
+    autoload -Uz _insert-oneliner
+    zle -N _insert-oneliner
+    bindkey "^[i" _insert-oneliner
+
+    # コマンドライン上の可変パラメータ(%%HOGE)を置換
+    autoload -Uz _kill-oneliner-param-forward
+    zle -N _kill-oneliner-param-forward
+    bindkey "^[j" _kill-oneliner-param-forward
+
+    # ghqを使ったローカルリポジトリの統一的・効率的な管理について - delirious thoughts
+    # http://blog.kentarok.org/entry/2014/06/03/135300
+    # ghqのローカルリポジトリ一覧
+    autoload -Uz peco-src
+    zle -N peco-src
+    bindkey '^X^G' peco-src
+    # goのdoc参照
+    autoload -Uz peco-godoc
+    zle -N peco-godoc
+    bindkey '^X^D' peco-godoc
+fi
+
+##
+# goの補完関数読み込み
+# (現状はautoloadで読み込める _go の形式になってないっぽい？)
+if [[ -x /usr/local/bin/_go ]]; then
+    source /usr/local/share/zsh/site-functions/_go
+fi
+
+####################
+# 各コマンドの設定 #
+####################
+
+# grepの設定
+## GNU grepがあったら優先して使う。
+#if type ggrep > /dev/null 2>&1; then
+#    alias grep=ggrep
+#fi
+## grepのバージョンを検出。
+#grep_version="$(grep --version | head -n 1 | sed -e 's/^[^0-9.]*\([0-9.]*\)$/\1/')"
+## デフォルトオプションの設定
+#export GREP_OPTIONS
+### バイナリファイルにはマッチさせない。
+GREP_OPTIONS="${GREP_OPTIONS} --binary-files=without-match"
+# case "$grep_version" in
+#     1.*|2.[0-4].*|2.5.[0-3])
+#   ;;
+#     *)
+#   ### grep 2.5.4以降のみの設定
+#         ### grep対象としてディレクトリを指定したらディレクトリ内を再帰的にgrepする。
+#    GREP_OPTIONS="--directories=recurse $GREP_OPTIONS"
+#   ;;
+# esac
+### 拡張子が.tmpのファイルは無視する。
+#GREP_OPTIONS="--exclude=\*.tmp $GREP_OPTIONS"
+## 管理用ディレクトリを無視する。
+# if grep --help | grep -q -- --exclude-dir; then
+#     GREP_OPTIONS="--exclude-dir=.svn $GREP_OPTIONS"
+#     GREP_OPTIONS="--exclude-dir=.git $GREP_OPTIONS"
+#     GREP_OPTIONS="--exclude-dir=.deps $GREP_OPTIONS"
+#     GREP_OPTIONS="--exclude-dir=.libs $GREP_OPTIONS"
+# fi
+### 可能なら色を付ける。
+# if grep --help | grep -q -- --color; then
+#     GREP_OPTIONS="--color=auto $GREP_OPTIONS"
+# fi
+
+# 自動で再コンパイル
+#[[ ~/.zshrc -nt ~/.zshrc.zwc ]] && zcompile ~/.zshrc
+#[[ ~/.zprofile -nt ~/.zprofile.zwc ]] && zcompile ~/.zprofile
+#[[ ~/.zshenv -nt ~/.zshenv.zwc ]] && zcompile ~/.zshenv
+#[[ ~/.zpreztorc -nt ~/.zpreztorc.zwc ]] && zcompile ~/.zpreztorc
+#[[ ~/.zcompdump -nt ~/.zcompdump.zwc ]] && zcompile ~/.zcompdump
+
+
+### brew install pyenvしたら (preztoのpythonモジュールでカバーされる)
+# To use Homebrew's directories rather than ~/.pyenv add to your profile:
+# zshenvに移動
+#export PYENV_ROOT=/usr/local/opt/pyenv
+# To enable shims and autocompletion add to your profile:
+#if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+# pyenv init - zsh の実行内容
+if which pyenv > /dev/null; then
+    export PYENV_SHELL=zsh
+    source /usr/local/Cellar/pyenv/201*/completions/pyenv.zsh
+    pyenv rehash 2>/dev/null
+    pyenv() {
+      local command
+      command="$1"
+      if [ "$#" -gt 0 ]; then
+        shift
+      fi
+
+      case "$command" in
+      activate|deactivate|rehash|shell)
+        eval "`pyenv "sh-$command" "$@"`";;
+      *)
+        command pyenv "$command" "$@";;
+      esac
+    }
+fi
+
+### brew install pyenv-virtualenv したなら (preztoのpythonモジュールでカバーされない？)
+# To enable auto-activation add to your profile:
+#if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+# pyenv virtualenv-init - zsh の実行内容
+if which pyenv-virtualenv-init > /dev/null; then
+    export PYENV_VIRTUALENV_INIT=1;
+    _pyenv_virtualenv_hook() {
+      if [ -n "$PYENV_ACTIVATE" ]; then
+        if [ "x`pyenv version-name`" = "xsystem" ]; then
+          pyenv deactivate --no-error --verbose
+          return 0
+        fi
+        if [ "x$PYENV_ACTIVATE" != "x`pyenv prefix`" ]; then
+          if pyenv deactivate --no-error --verbose; then
+            pyenv activate --no-error --verbose || unset PYENV_DEACTIVATE
+          else
+            pyenv activate --no-error --verbose
+          fi
+        fi
+      else
+        if [ -z "$VIRTUAL_ENV" ] && [ "x$PYENV_DEACTIVATE" != "x`pyenv prefix`" ]; then
+          pyenv activate --no-error --verbose
+        fi
+      fi
+    };
+    typeset -a precmd_functions
+    if [[ -z $precmd_functions[(r)_pyenv_virtualenv_hook] ]]; then
+      precmd_functions+=_pyenv_virtualenv_hook;
+    fi
+fi
+
+### Pythonのvirtualenvwrapper用 (preztoのpythonモジュールでカバーされる)
+#if [[ -f /usr/local/bin/virtualenvwrapper.sh ]]; then
+#   export WORKON_HOME=$HOME/.virtualenvs
+#   source /usr/local/bin/virtualenvwrapper.sh
+#fi
+
+### brew install pyenv-virtualenvwrapper したなら (preztoのpythonモジュールでカバーされない？)
+### preztoのpythonモジュールを変更したやつ
+# Load virtualenvwrapper into the shell session.
+if which virtualenvwrapper_lazy > /dev/null; then
+    # Set the directory where virtual environments are stored.
+    export WORKON_HOME="$HOME/.virtualenvs"
+
+    # Disable the virtualenv prompt.
+    VIRTUAL_ENV_DISABLE_PROMPT=1
+
+    ### Using pyenv virtualenvwrapper
+    # To setup a virtualenvwrapper into your shell, just run pyenv virtualenvwrapper. For example,
+    # $ pyenv virtualenvwrapper
+    # or, if you favor virtualenvwrapper_lazy.sh,
+    # $ pyenv virtualenvwrapper_lazy
+    pyenv virtualenvwrapper_lazy
+
+    ### Using pyvenv instead of virtualenv
+    # To get virtualenvwrapper to create a virtual environment using pyvenv instead of virtualenv,
+    # set the PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV environment variable. For example,
+    # set the following in your shell initialization config:
+    #export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+    # After you start a new shell with that variable set and initialize via pyenv virtualenvwrapper
+    # or pyenv virtualenvwrapper_lazy, any virtual environments created from that shell using
+    # mkvirtualenv will be created using pyvenv if it is available in the active Python version
+    # (pyvenv is in Python 3.3 or later).
+fi
+
+#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
+[[ -s "${HOME}/.gvm/bin/gvm-init.sh" ]] && source "${HOME}/.gvm/bin/gvm-init.sh"
+
+if [[ "$ZVERVOSE_MODE" = true ]]; then
+    setopt >! ~/set_opts_5_zshrc.txt
+    functions >! ~/set_functions_5_zshrc.txt
+    export >! ~/set_exports_5_zshrc.txt
+    echo "MANPATH=$MANPATH" >>! ~/set_exports_5_zshrc.txt
+    echo "fpath=$fpath" >>! ~/set_exports_5_zshrc.txt
+    echo ".zshrc loaded!" >>! ~/set_zsh.txt
+fi
+
+# zsh プロファイリング用
+if [[ "$ZPROF_MODE" = true ]]; then
+    if (which zprof > /dev/null) ;then
+        #zprof > ~/GoogleDrive/dotfiles/zprof_"${USER}@${HOST%.local}"_prezto_`date +%y%m%d%H%M`.txt
+        zprof | less
+    fi
+fi
