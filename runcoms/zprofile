@@ -144,12 +144,22 @@ fi
 # ( http://www.hlplus.jp/php/blog/index.php?UID=1302358652 )
 if [[ "$OSTYPE" == darwin* ]]; then
     #ROOT_PREFIX=`find /Volumes -maxdepth 1 -type l`
-    if [[ "$HOST" == "iMac.local" ]]; then
-        ROOT_PREFIX=''
-    else
-        ROOT_PREFIX=/Volumes/OS\ X
-    fi
-    if ANDROID_HOME=`dirname ${ROOT_PREFIX}/opt/homebrew-cask/Caskroom/android-studio*/*/Android\ Studio.app/sdk 2>/dev/null`'/sdk'; then
+    #if [[ "$HOST" == "iMac.local" ]]; then
+    #    ROOT_PREFIX=''
+    #else
+    #    ROOT_PREFIX=/Volumes/OS\ X
+    #fi
+    if [[ -d /Applications/android-sdk-macosx ]]; then
+        export ANDROID_HOME=/Applications/android-sdk-macosx
+        path=($path
+            ${ANDROID_HOME}/tools(N-/)
+            ${ANDROID_HOME}/platform-tools(N-/))
+    elif [[ -L /usr/local/opt/android-sdk ]]; then
+        export ANDROID_HOME=/usr/local/opt/android-sdk
+        path=($path
+            ${ANDROID_HOME}/tools(N-/)
+            ${ANDROID_HOME}/platform-tools(N-/))
+    elif ANDROID_HOME=`dirname ${ROOT_PREFIX}/opt/homebrew-cask/Caskroom/android-studio*/*/Android\ Studio.app/sdk 2>/dev/null`'/sdk'; then
         export ANDROID_HOME
         path=($path
             ${ANDROID_HOME}/tools(N-/)
