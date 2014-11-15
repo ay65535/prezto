@@ -149,7 +149,12 @@ if [[ "$OSTYPE" == darwin* ]]; then
     #else
     #    ROOT_PREFIX=/Volumes/OS\ X
     #fi
-    if [[ -d /Applications/android-sdk-macosx ]]; then
+    if [[ -d ~/Developer/android-sdk-macosx ]]; then
+        export ANDROID_HOME=~/Developer/android-sdk-macosx
+        path=($path
+            ${ANDROID_HOME}/tools(N-/)
+            ${ANDROID_HOME}/platform-tools(N-/))
+    elif [[ -d /Applications/android-sdk-macosx ]]; then
         export ANDROID_HOME=/Applications/android-sdk-macosx
         path=($path
             ${ANDROID_HOME}/tools(N-/)
