@@ -238,7 +238,8 @@ if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi
 # diff-highlightへのパス
 path=(
     $path
-    /usr/share/doc/git/contrib/diff-highlight(N-/)
+    #/usr/share/doc/git/contrib/diff-highlight(N-/)
+    /usr/local/share/git-core/contrib/diff-highlight(N-/)
     )
 
 
@@ -484,6 +485,10 @@ TMPPREFIX="${TMPDIR%/}/zsh"
 if [[ ! -d "$TMPPREFIX" ]]; then
   mkdir -p "$TMPPREFIX"
 fi
+
+export PATH
+export MANPATH
+
 
 if [[ "$ZVERVOSE_MODE" = true ]]; then
     setopt >! ~/set_opts_3_zprofile.txt
