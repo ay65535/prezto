@@ -12,18 +12,18 @@
 function prompt_steeef_modified_precmd {
   # Check for untracked files or updated submodules since vcs_info does not.
   if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
-    branch_format="%Bon%%b ${_prompt_steeef_modified_colors[1]}%b%f %u%c${_prompt_steeef_modified_colors[4]}●%f"
+    branch_format="%Bon%%b ${_prompt_steeef_modified_colors[5]}%b%f %u%c${_prompt_steeef_modified_colors[4]}●%f"
   else
-    branch_format="%Bon%%b ${_prompt_steeef_modified_colors[1]}%b%f %u%c"
+    branch_format="%Bon%%b ${_prompt_steeef_modified_colors[5]}%b%f %u%c"
   fi
 
   zstyle ':vcs_info:*:prompt:*' formats "${branch_format}"
 
   vcs_info 'prompt'
 
-  if (( $+functions[python-info] )); then
-    python-info
-  fi
+  #if (( $+functions[python-info] )); then
+  #  python-info
+  #fi
 }
 
 function prompt_steeef_modified_setup {
@@ -41,11 +41,23 @@ function prompt_steeef_modified_setup {
   # Use extended color pallete if available.
   if [[ $TERM = *256color* || $TERM = *rxvt* ]]; then
     _prompt_steeef_modified_colors=(
-      "%F{81}"  # Turquoise
-      "%F{166}" # Orange
-      "%F{135}" # Purple
-      "%F{161}" # Hotpink
-      "%F{118}" # Limegreen
+      #"%F{81}"  # Turquoise
+      "%F{110}" # 6894D1: Tomorrow Night Bright: Blue Normal
+      #"%F{111}" # 7AA6DA: Tomorrow Night Bright: Blue Bright
+      #"%F{166}" # Orange
+      "%F{221}" # E0BB38: Tomorrow Night Bright: Yellow Normal
+      #"%F{221}" # E7C547: Tomorrow Night Bright: Yellow Bright
+      #"%F{135}" # Purple
+      "%F{182}" # B581CF: Tomorrow Night Bright: Magenta Normal
+      #"%F{183}" # C397D8: Tomorrow Night Bright: Magenta Bright
+      #"%F{161}" # Hotpink
+      "%F{167}" # D54E53: Tomorrow Night Bright: Red Normal
+      #"%F{167}" # C93742: Tomorrow Night Bright: Red Bright
+      #"%F{118}" # Limegreen
+      "%F{149}" # 9CB92D: Tomorrow Night Bright: Green Normal
+      #"%F{185}" # ABC23A: Tomorrow Night Bright: Green Bright
+      "%F{115}" # 60B5A1: Tomorrow Night Bright: Cyan Normal
+      #"%F{116}" # 70C0B1: Tomorrow Night Bright: Cyan Bright
     )
   else
     _prompt_steeef_modified_colors=(
@@ -64,7 +76,7 @@ function prompt_steeef_modified_setup {
   #   %a - action (e.g. rebase-i)
   #   %R - repository path
   #   %S - path in the repository
-  local branch_format="%Bon%%b ${_prompt_steeef_modified_colors[1]}%b%f%u%c"
+  local branch_format="%Bon%%b ${_prompt_steeef_modified_colors[5]}%b%f%u%c"
   local action_format="${_prompt_steeef_modified_colors[5]}%a%f"
   local unstaged_format="${_prompt_steeef_modified_colors[2]}●%f"
   local staged_format="${_prompt_steeef_modified_colors[5]}●%f"
@@ -79,12 +91,12 @@ function prompt_steeef_modified_setup {
   zstyle ':vcs_info:*:prompt:*' nvcsformats   ""
 
   # Set python-info parameters.
-  zstyle ':prezto:module:python:info:virtualenv' format '(%v)'
+  #zstyle ':prezto:module:python:info:virtualenv' format '(%v)'
 
   # Define prompts.
-  PROMPT="
-${_prompt_steeef_modified_colors[3]}%n%f %Bat%b ${_prompt_steeef_modified_colors[2]}%m%f %Bin%b ${_prompt_steeef_modified_colors[5]}%~%f "'${vcs_info_msg_0_}'"
-"'$python_info[virtualenv]'"$ "
+  #local prompt_1st=
+  PROMPT=$'\n'"${_prompt_steeef_modified_colors[3]}%n%f %Bat%b ${_prompt_steeef_modified_colors[2]}%m%f %Bin%b ${_prompt_steeef_modified_colors[1]}%~%f "'${vcs_info_msg_0_}'""$'\n'"%(?,${_prompt_steeef_modified_colors[5]},${_prompt_steeef_modified_colors[4]})%(!.#.$)%f "
+  #"'$python_info[virtualenv]'"$ "
   RPROMPT=''
 }
 

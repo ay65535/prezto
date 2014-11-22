@@ -564,6 +564,9 @@ if which virtualenvwrapper_lazy > /dev/null; then
     # (pyvenv is in Python 3.3 or later).
 fi
 
+# added by travis gem
+[ -f /Users/ats/.travis/travis.sh ] && source /Users/ats/.travis/travis.sh
+
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
 [[ -s "${HOME}/.gvm/bin/gvm-init.sh" ]] && source "${HOME}/.gvm/bin/gvm-init.sh"
 

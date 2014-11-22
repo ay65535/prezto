@@ -23,9 +23,9 @@ function prompt_skwp_mod_precmd {
   fi
 
   # Get ruby information
-  if (( $+functions[ruby-info] )); then
-    ruby-info
-  fi
+  #if (( $+functions[ruby-info] )); then
+  #  ruby-info
+  #fi
 
   # Get python information
   #if (( $+functions[python-info] )); then
@@ -78,7 +78,8 @@ function prompt_skwp_mod_setup {
   # Define prompts.
   PROMPT="
 ${__PROMPT_SKWP_MOD_COLORS[3]}%n%f %Bat%b ${__PROMPT_SKWP_MOD_COLORS[2]}%m%f %Bin%b ${__PROMPT_SKWP_MOD_COLORS[5]}%~%f "'$git_info[prompt]'"
-"'$python_info[virtualenv]'"$ "
+%# "
+#"'$python_info[virtualenv]'"$ "
   #RPROMPT='%F{blue}${ruby_info[version]}'
 }
 

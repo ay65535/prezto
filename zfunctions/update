@@ -49,29 +49,29 @@
 
     #execute sudo softwareupdate -i -a
     execute sudo tlmgr update --self --all
-    execute pushd $YADR && \
-    execute pwd && \
-    git-check && \
-    execute rake update && \
-    popd && \
-    execute cd
-    execute pwd
-    setopt EXTENDED_GLOB
-    #for rcfile in ls ~/Dropbox/yadr/zsh/prezto/runcoms/^(README.md|zpreztorc)(.N); do
-    for rcfile in ls ~/./yadr/zsh/prezto/runcoms/^(README.md|zpreztorc)(.N); do
-        ln -sfhv "$rcfile" ".${rcfile:t}"
-    done
-    execute grep -2 'for config_file ' ~/.zshrc
-    sed -i".bak" -e 's/^for config_file .*$//' ~/.zshrc
-    execute grep -2 'for config_file ' ~/.zshrc
-    execute read
-    execute pushd $YADR/zsh/prezto && \
-    execute pwd && \
-    git-check && \
-    execute popd && \
-    execute pwd
+    #execute pushd $YADR && \
+    #execute pwd && \
+    #git-check && \
+    #execute rake update && \
+    #popd && \
+    #execute cd
+    #execute pwd
+    #setopt EXTENDED_GLOB
+    ##for rcfile in ls ~/Dropbox/yadr/zsh/prezto/runcoms/^(README.md|zpreztorc)(.N); do
+    #for rcfile in ls ~/./yadr/zsh/prezto/runcoms/^(README.md|zpreztorc)(.N); do
+    #    ln -sfhv "$rcfile" ".${rcfile:t}"
+    #done
+    #execute grep -2 'for config_file ' ~/.zshrc
+    #sed -i".bak" -e 's/^for config_file .*$//' ~/.zshrc
+    #execute grep -2 'for config_file ' ~/.zshrc
+    #execute read
+    #execute pushd $YADR/zsh/prezto && \
+    #execute pwd && \
+    #git-check && \
+    #execute popd && \
+    #execute pwd
     # rake updateでされる
-    #execute brew update && \
+    execute brew update && \
     execute brew upgrade && \
     execute brew cleanup
     # rubyはシステムのを使うなら sudo必要，rbenvのならいらない
