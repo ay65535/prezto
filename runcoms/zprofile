@@ -377,6 +377,7 @@ manpath=(
     #/usr/sfw/share/man(N-/)
     # coreutils 用 (from Homebrew)
     /usr/local/opt/coreutils/libexec/gnuman(N-/)
+    /usr/local/share/git-core/contrib/diff-highlight(N-/)
 )
 
 # fpathの設定
@@ -437,8 +438,6 @@ fpath=(
 #                 $HOME/local/lib/pkgconfig(N-/)
 #                 # MacPorts用
 #                 /opt/local/lib/pkgconfig(N-/))
-
-#[[ -x /usr/local/share/git-core/contrib/diff-highlight/diff-highlight && ! -x /usr/local/bin/diff-highlight ]] && ln -s /usr/local/share/git-core/contrib/diff-highlight/diff-highlight /usr/local/bin/diff-highlight
 
 #
 # Less
