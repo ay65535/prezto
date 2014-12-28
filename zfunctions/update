@@ -58,7 +58,7 @@
     #execute pwd
     #setopt EXTENDED_GLOB
     ##for rcfile in ls ~/Dropbox/yadr/zsh/prezto/runcoms/^(README.md|zpreztorc)(.N); do
-    #for rcfile in ls ~/./yadr/zsh/prezto/runcoms/^(README.md|zpreztorc)(.N); do
+    #for rcfile in ls ~/.yadr/zsh/prezto/runcoms/^(README.md|zpreztorc)(.N); do
     #    ln -sfhv "$rcfile" ".${rcfile:t}"
     #done
     #execute grep -2 'for config_file ' ~/.zshrc
