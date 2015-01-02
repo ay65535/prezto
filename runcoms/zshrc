@@ -203,8 +203,8 @@ alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/La
 # rm
 if [ -x /usr/local/bin/trash ]; then
     alias rm="trash"
-elif [ -x ~/bin/mv2trash ]; then
-    alias rm="mv2trash"
+#elif [ -x ~/bin/mv2trash ]; then
+#    alias rm="mv2trash"
 else
     alias rm='nocorrect rm -i'
 fi

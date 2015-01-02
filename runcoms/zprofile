@@ -178,13 +178,22 @@ if [[ -z "$GRADLE_HOME" ]]; then
     [[ -d /usr/local/Cellar/groovy ]] && export GROOVY_HOME=/usr/local/opt/groovy/libexec
 fi
 
-# GRADLE_HOMEの設定 (obsolete, 下記のGVMの設定で設定される)
-if [[ -z "$GRADLE_HOME" ]]; then
-    [[ -d /usr/local/Cellar/gradle ]] && export GRADLE_HOME=/usr/local/opt/gradle/libexec
-fi
-
 # GVM (http://gvmtool.net/) の設定
 # .zshrcの末尾に追加した。
+
+# Android Studioの設定
+#  If you have Java 7 or above installed, you may want to use it as Android Studio JDK, for example:
+#  export STUDIO_JDK=/Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk
+#  Please take a look at this post: http://tools.android.com/recent/androidstudio1rc3_releasecandidate3released
+STUDIO_JDK=$(/usr/libexec/java_home -v 1.8 2>/dev/null)
+case "$STUDIO_JDK" in
+    *1.8* )
+        export STUDIO_JDK=${STUDIO_JDK%/*/*}
+        ;;
+    * )
+        unset STUDIO_JDK
+        ;;
+esac
 
 # Mac(homebrew)でGoのインストールと、Emacsの環境構築 - ありの日記
 # http://d.hatena.ne.jp/hiro_nemu/20140113/1389620004
