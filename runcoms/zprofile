@@ -213,13 +213,13 @@ fi
 
 # Perl の設定 (brw install plenv の場合) (2014-07-04 added)
 # ( http://blog.sotm.jp/2014/01/09/Installing-pyenv-virtualenv-rbenv-gemse-plenv-pmset-on-MacOSX-109/#perlplenv )
-if which plenv > /dev/null; then
+#if which plenv > /dev/null; then
     #export PLENV_ROOT="~/.plenv"  # default
     #export PATH=${PLENV_ROOT}/shims:${PATH}  # パスはplenv initで自動的に通されるみたい
     #path=(${PLENV_ROOT}/shims(N-/) $path)
     #eval "$(plenv init -)"
-    eval "$(plenv init - zsh)"  # zshでは引数が必要？
-fi
+#    eval "$(plenv init - zsh)"  # zshでは引数が必要？
+#fi
 
 # Rubyの設定
 # ライブラリのロードパス
@@ -235,7 +235,7 @@ fi
 # To use Homebrew's directories rather than ~/.rbenv add to your profile:
 #export RBENV_ROOT=/usr/local/var/rbenv
 # To enable shims and autocompletion add to your profile:
-if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi
+#if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi
 # preztoのrubyモジュール有効化してたら自動でこれされる
 
 # diff-highlightへのパス

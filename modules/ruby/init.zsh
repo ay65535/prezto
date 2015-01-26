@@ -5,6 +5,21 @@
 # Authors: Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+# https://github.com/uu59/dotfiles/commit/d14e9893e1233141970991102256f80c12bb418b
+function source_rbenv() {
+  local rbenv_zsh_file="$HOME/.rbenv-zsh"
+
+  if [ -f "$rbenv_zsh_file" ]; then
+    source $rbenv_zsh_file
+  else
+    which rbenv > /dev/null
+    if [ $? -eq 0 ]; then
+      echo "$(rbenv init - --no-rehash)" > $rbenv_zsh_file
+      source $rbenv_zsh_file
+    fi
+  fi
+}
+
 # Load RVM into the shell session.
 if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
   # Unset AUTO_NAME_DIRS since auto adding variable-stored paths to ~ list
@@ -17,11 +32,11 @@ if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
 # Load manually installed rbenv into the shell session.
 elif [[ -s "$HOME/.rbenv/bin/rbenv" ]]; then
   path=("$HOME/.rbenv/bin" $path)
-  eval "$(rbenv init - --no-rehash zsh)"
+  source_rbenv
 
 # Load package manager installed rbenv into the shell session.
 elif (( $+commands[rbenv] )); then
-  eval "$(rbenv init - --no-rehash zsh)"
+  source_rbenv
 
 # Load package manager installed chruby into the shell session.
 elif (( $+commands[chruby-exec] )); then
