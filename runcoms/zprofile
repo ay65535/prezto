@@ -174,8 +174,12 @@ if [[ "$OSTYPE" == darwin* ]]; then
 fi
 
 # GRADLE_HOMEの設定 (obsolete, 下記のGVMの設定で設定される？)
-if [[ -z "$GRADLE_HOME" ]]; then
+if [[ -z "$GROOVY_HOME" ]]; then
     [[ -d /usr/local/Cellar/groovy ]] && export GROOVY_HOME=/usr/local/opt/groovy/libexec
+fi
+
+if [[ -z "$GRADLE_HOME" ]]; then
+    [[ -d /usr/local/Cellar/gradle ]] && export GRADLE_HOME=/usr/local/opt/gradle/libexec
 fi
 
 # GVM (http://gvmtool.net/) の設定
