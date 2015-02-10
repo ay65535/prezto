@@ -1,15 +1,18 @@
 ##
 # Pecoを導入してzshのhistoryに使うようにした
 # http://blog.kenjiskywalker.org/blog/2014/06/12/peco/
-local tac
-if which tac > /dev/null; then
-    tac="tac"
-else
-    tac="tail -r"
-fi
+#local tac
+#if which tac > /dev/null; then
+#    tac="tac"
+#else
+#    tac="tail -r"
+#fi
+    #eval $tac | \
 BUFFER=$(history -n 1 | \
-    eval $tac | \
-    $PERCOL --query "$LBUFFER")
-CURSOR=$#BUFFER  # move cursor
-zle clear-screen
-#zle -R -c       # refresh
+    tail -r | \
+    $PERCOL --query "$LBUFFER" | \
+    sed s,'\\n',\\$'\n',g)
+CURSOR=$#BUFFER    # move cursor
+#zle clear-screen  # zenmu kieru
+zle redisplay      # refresh
+#zle -R -c         # refresh

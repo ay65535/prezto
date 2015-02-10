@@ -42,11 +42,13 @@ fi
 #
 
 # YADR 入れてるかどうか
-if [[ -d ~/Dropbox/yadr && -L ~/.yadr ]]; then
+if [[ -d ~/local/src/github.com/ay65535/yadr && -L ~/.yadr ]]; then
+    export YADR=~/local/src/github.com/ay65535/yadr
+elif [[ -d ~/Dropbox/yadr && -L ~/.yadr ]]; then
     export YADR=~/Dropbox/yadr
 elif [[ -d ~/.yadr || -L ~/.yadr ]]; then
     export YADR=~/.yadr
-else
+#else
     #export YADR=""
     #echo "yadr is not found"
 fi
@@ -111,8 +113,8 @@ path=(
     /opt/X11/bin(N-/)      # X11 / XQuartz
     #/usr/X11/bin(N-/)     # OS X 10.8 からは /opt/X11/bin へのエイリアス
     /usr/texbin(N-/)
-    #${HOME}/local/bin(N-/)  # 自分用（--prefix=$HOME/localでインストールしたもの）
-    ${HOME}/.local/bin(N-/)  # 自分用 (環境依存のバイナリなど)
+    ${HOME}/local/bin(N-/)  # 自分用（--prefix=$HOME/localでインストールしたもの）
+    #${HOME}/.local/bin(N-/)  # 自分用 (環境依存のバイナリなど)
     ${HOME}/bin(N-/)         # スクリプト系 or 各アプリが勝手にインストールするもの
 )
 
@@ -189,15 +191,22 @@ fi
 #  If you have Java 7 or above installed, you may want to use it as Android Studio JDK, for example:
 #  export STUDIO_JDK=/Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk
 #  Please take a look at this post: http://tools.android.com/recent/androidstudio1rc3_releasecandidate3released
-STUDIO_JDK=$(/usr/libexec/java_home -v 1.8 2>/dev/null)
+##
+# http://tools.android.com/tech-docs/configuration/osx-jdk
+#  On Mac OSX, the default version we are using to run the IDE (not to compile your code) is Java 6.
+# This is primarily because the font rendering on Java 6 has full subpixel LCD antialiasing, whereas Java 7 and 8 does not.
+STUDIO_JDK=$(/usr/libexec/java_home -v 1.6 2>/dev/null)
 case "$STUDIO_JDK" in
-    *1.8* )
+    *1.*.* )
         export STUDIO_JDK=${STUDIO_JDK%/*/*}
         ;;
     * )
         unset STUDIO_JDK
         ;;
 esac
+
+# http://tools.android.com/tech-docs/configuration
+STUDIO_VM_OPTIONS=-Xmx2048m
 
 # Mac(homebrew)でGoのインストールと、Emacsの環境構築 - ありの日記
 # http://d.hatena.ne.jp/hiro_nemu/20140113/1389620004
@@ -235,6 +244,12 @@ fi
 ## パスを設定
 #ruby_path=(# カレントディレクトリのライブラリを優先する
 #           ./lib)
+# TODO: rubyの環境によってPATH設定自動化する
+# Rubyの設定 (brew install rubyのみ)
+path=(
+    $path
+    /usr/local/Cellar/ruby/HEAD/bin(N-/)
+    )
 # Rubyの設定 (brew install rbenv)
 # To use Homebrew's directories rather than ~/.rbenv add to your profile:
 #export RBENV_ROOT=/usr/local/var/rbenv
@@ -360,7 +375,7 @@ typeset -U manpath
 ##            /: ディレクトリのみ残す。
 manpath=(
     # 自分用
-    #$HOME/local/share/man(N-/)
+    $HOME/local/share/man(N-/)
     # Homebrew用
     /usr/local/share/man(N-/)
     # MacPorts用
@@ -379,7 +394,6 @@ manpath=(
     #/usr/sfw/share/man(N-/)
     # coreutils 用 (from Homebrew)
     /usr/local/opt/coreutils/libexec/gnuman(N-/)
-    /usr/local/share/git-core/contrib/diff-highlight(N-/)
 )
 
 # fpathの設定

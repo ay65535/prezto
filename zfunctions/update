@@ -73,7 +73,8 @@
     # rake updateでされる
     execute brew update && \
     execute brew upgrade && \
-    execute brew cleanup
+    execute brew cleanup && \
+    execute brew doctor
     # rubyはシステムのを使うなら sudo必要，rbenvのならいらない
     if which update_rubygems >/dev/null; then
         execute update_rubygems
@@ -86,8 +87,8 @@
         execute pip-review --auto
     else
         print_cmd pip install -U && \
-        pip list | cut -d ' ' -f 1 | xargs -t -J% pip install -U %
+        pip list | cut -d ' ' -f 1 | xargs -t -I% pip install -U %
     fi
     print_cmd pip3 install -U && \
-    pip3 list | cut -d ' ' -f 1 | xargs -t -J% pip3 install -U %
+    pip3 list | cut -d ' ' -f 1 | xargs -t -I% pip3 install -U %
 #}

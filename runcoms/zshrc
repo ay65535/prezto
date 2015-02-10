@@ -99,6 +99,9 @@ setopt rmstar_wait
 # (プロンプトに$HOSTとか$UIDとかいった類のものが使用出来るようになる。)
 #setopt prompt_subst
 
+# プロンプト入力中に改行
+bindkey '^J' self-insert
+
 ################
 ### 環境変数 ###
 ################
