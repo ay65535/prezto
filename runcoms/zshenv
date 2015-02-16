@@ -183,7 +183,7 @@ fi
 #fi
 
 # To use Homebrew's directories rather than ~/.pyenv add to your profile:
-export PYENV_ROOT=/usr/local/opt/pyenv
+#export PYENV_ROOT=/usr/local/opt/pyenv
 
 ##
 # virtualenv python environments

@@ -327,7 +327,7 @@ autoload -Uz symlink-zfuncs
 ## どちらを使うか
 if which peco >/dev/null 2>&1; then
     export PERCOL=peco  # (percol|peco)
-elif which percol 2>/dev/null; then
+elif which percol >/dev/null 2>&1; then
     export PERCOL=percol  # (percol|peco)
 fi
 
@@ -483,6 +483,7 @@ GREP_OPTIONS="${GREP_OPTIONS} --binary-files=without-match"
 #if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # pyenv init - zsh の実行内容
 if which pyenv > /dev/null; then
+    export PATH="/Users/ats/.pyenv/shims:${PATH}"
     export PYENV_SHELL=zsh
     source /usr/local/Cellar/pyenv/201*/completions/pyenv.zsh
     pyenv rehash 2>/dev/null
@@ -494,7 +495,7 @@ if which pyenv > /dev/null; then
       fi
 
       case "$command" in
-      activate|deactivate|rehash|shell)
+      rehash|shell)
         eval "`pyenv "sh-$command" "$@"`";;
       *)
         command pyenv "$command" "$@";;
@@ -569,6 +570,12 @@ fi
 
 # added by travis gem
 [ -f /Users/ats/.travis/travis.sh ] && source /Users/ats/.travis/travis.sh
+
+# The next line updates PATH for the Google Cloud SDK.
+#source '/Users/ats/Developer/google-cloud-sdk/path.zsh.inc'
+
+# The next line enables bash completion for gcloud.
+#source '/Users/ats/Developer/google-cloud-sdk/completion.zsh.inc'
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
 [[ -s "${HOME}/.gvm/bin/gvm-init.sh" ]] && source "${HOME}/.gvm/bin/gvm-init.sh"
