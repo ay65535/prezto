@@ -272,6 +272,9 @@ alias updatedb='sudo /usr/libexec/locate.updatedb'
 alias xbb=extractbb
 alias jbibtex="pbibtex" # 互換性確保のためjbibtexでも通るように
 
+# rsync
+alias rsyncd="command rsync --daemon --config=/etc/rsyncd.conf"
+alias rsync="rsync --exclude-from=$CLOUD_CONFIG_HOME/rsync/ignore"
 
 ############
 ### 関数 ###
