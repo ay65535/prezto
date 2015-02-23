@@ -483,23 +483,25 @@ GREP_OPTIONS="${GREP_OPTIONS} --binary-files=without-match"
 #if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # pyenv init - zsh の実行内容
 if which pyenv > /dev/null; then
-    export PATH="/Users/ats/.pyenv/shims:${PATH}"
+    #export PATH="${PYENV_ROOT}/shims:${PATH}"
+    export PATH="/usr/local/opt/pyenv/shims:${PATH}"
     export PYENV_SHELL=zsh
-    source /usr/local/Cellar/pyenv/201*/completions/pyenv.zsh
+    #source /usr/local/Cellar/pyenv/201*/completions/pyenv.zsh
+    source '/usr/local/Cellar/pyenv/20150204/libexec/../completions/pyenv.zsh'
     pyenv rehash 2>/dev/null
     pyenv() {
-      local command
-      command="$1"
-      if [ "$#" -gt 0 ]; then
-        shift
-      fi
+        local command
+        command="$1"
+        if [ "$#" -gt 0 ]; then
+            shift
+        fi
 
-      case "$command" in
-      rehash|shell)
-        eval "`pyenv "sh-$command" "$@"`";;
-      *)
-        command pyenv "$command" "$@";;
-      esac
+        case "$command" in
+            activate|deactivate|rehash|shell)
+                eval "`pyenv "sh-$command" "$@"`";;
+            *)
+                command pyenv "$command" "$@";;
+        esac
     }
 fi
 
@@ -510,27 +512,29 @@ fi
 if which pyenv-virtualenv-init > /dev/null; then
     export PYENV_VIRTUALENV_INIT=1;
     _pyenv_virtualenv_hook() {
-      if [ -n "$PYENV_ACTIVATE" ]; then
-        if [ "x`pyenv version-name`" = "xsystem" ]; then
-          pyenv deactivate --no-error --verbose
-          return 0
+        if [ -n "$PYENV_ACTIVATE" ]; then
+            if [ "$(pyenv version-name 2>/dev/null || true)" = "system" ]; then
+                pyenv deactivate --no-error --verbose
+                unset PYENV_DEACTIVATE
+                return 0
+            fi
+            if [ "$PYENV_ACTIVATE" != "$(pyenv prefix 2>/dev/null || true)" ]; then
+                if pyenv deactivate --no-error --verbose; then
+                    unset PYENV_DEACTIVATE
+                    pyenv activate --no-error --verbose || unset PYENV_DEACTIVATE
+                else
+                    pyenv activate --no-error --verbose
+                fi
+            fi
+        else
+            if [ -z "$VIRTUAL_ENV" ] && [ "$PYENV_DEACTIVATE" != "$(pyenv prefix 2>/dev/null || true)" ]; then
+              pyenv activate --no-error --verbose
+            fi
         fi
-        if [ "x$PYENV_ACTIVATE" != "x`pyenv prefix`" ]; then
-          if pyenv deactivate --no-error --verbose; then
-            pyenv activate --no-error --verbose || unset PYENV_DEACTIVATE
-          else
-            pyenv activate --no-error --verbose
-          fi
-        fi
-      else
-        if [ -z "$VIRTUAL_ENV" ] && [ "x$PYENV_DEACTIVATE" != "x`pyenv prefix`" ]; then
-          pyenv activate --no-error --verbose
-        fi
-      fi
     };
     typeset -a precmd_functions
     if [[ -z $precmd_functions[(r)_pyenv_virtualenv_hook] ]]; then
-      precmd_functions+=_pyenv_virtualenv_hook;
+        precmd_functions+=_pyenv_virtualenv_hook;
     fi
 fi
 
@@ -576,6 +580,15 @@ fi
 
 # The next line enables bash completion for gcloud.
 #source '/Users/ats/Developer/google-cloud-sdk/completion.zsh.inc'
+
+##
+# docker
+if [[ -f ~/.boot2docker/boot2docker.iso ]]; then
+    export DOCKER_TLS_VERIFY=1
+    export DOCKER_HOST=tcp://$(boot2docker ip 2>/dev/null):2376
+    export DOCKER_CERT_PATH=~/.boot2docker/certs/boot2docker-vm
+fi
+
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
 [[ -s "${HOME}/.gvm/bin/gvm-init.sh" ]] && source "${HOME}/.gvm/bin/gvm-init.sh"
