@@ -490,7 +490,7 @@ if which pyenv > /dev/null; then
     export PATH="/usr/local/opt/pyenv/shims:${PATH}"
     export PYENV_SHELL=zsh
     #source /usr/local/Cellar/pyenv/201*/completions/pyenv.zsh
-    source '/usr/local/Cellar/pyenv/20150204/libexec/../completions/pyenv.zsh'
+    source '/usr/local/Cellar/pyenv/20150226/libexec/../completions/pyenv.zsh'
     pyenv rehash 2>/dev/null
     pyenv() {
         local command
