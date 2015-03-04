@@ -436,6 +436,14 @@ fpath=(
 #python_path=(# カレントディレクトリのライブラリを優先する
 #             ./lib)
 
+## pylearn2
+export PYLEARN2_DATA_PATH=${HOME}/Documents/pylearn2/data
+export PYLEARN2_VIEWER_COMMAND="eog --new-instance"
+path=(
+    $path
+    ~/local/src/github.com/lisa-lab/pylearn2/pylearn2/scripts(N-/)
+    )
+
 # pkg-configの設定
 ## .pcのロードパス
 ### -x: export PKG_CONFIG_PATHも一緒に行う。
