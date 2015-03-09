@@ -7,10 +7,14 @@ if which tac > /dev/null; then
 else
     tac="tail -r"
 fi
-BUFFER=$(history -n 1 | \
+local buffer
+buffer=$(history -n 1 | \
     eval $tac | \
-    $PERCOL --query "$LBUFFER" | \
+    $PERCOL --layout=bottom-up --query "$LBUFFER" | \
     sed s,'\\n',\\$'\n',g)
+if [[ ! -z $buffer ]]; then
+    BUFFER=$buffer
+fi
 CURSOR=$#BUFFER    # move cursor
 #zle clear-screen  # zenmu kieru
 zle redisplay      # refresh

@@ -121,7 +121,7 @@ path=(
 # JAVA_HOMEの設定
 if [[ -z "$JAVA_HOME" ]]; then
     if [[ -x /usr/libexec/java_home ]]; then
-        export JAVA_HOME=`/usr/libexec/java_home -v 1.7 2>/dev/null` || \
+        export JAVA_HOME=`/usr/libexec/java_home -v 1.8 2>/dev/null` || \
         export JAVA_HOME=`/usr/libexec/java_home`
     #elif [[ -d /usr/lib/jvm/java-6-sun/jre ]]; then  # Ubuntu用
     #    export JAVA_HOME=/usr/lib/jvm/java-6-sun/jre
@@ -206,7 +206,8 @@ case "$STUDIO_JDK" in
 esac
 
 # http://tools.android.com/tech-docs/configuration
-STUDIO_VM_OPTIONS=-Xmx2048m
+STUDIO_VM_OPTIONS=~/Dropbox/Library/Preferences/AndroidStudio/studio.vmoptions
+STUDIO_PROPERTIES=~/Dropbox/Library/Preferences/AndroidStudio/idea.properties
 
 # Mac(homebrew)でGoのインストールと、Emacsの環境構築 - ありの日記
 # http://d.hatena.ne.jp/hiro_nemu/20140113/1389620004
