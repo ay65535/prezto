@@ -279,6 +279,10 @@ alias jbibtex="pbibtex" # 互換性確保のためjbibtexでも通るように
 alias rsyncd="command rsync --daemon --config=/etc/rsyncd.conf"
 alias rsync="rsync --exclude-from=$CLOUD_CONFIG_HOME/rsync/ignore"
 
+# man
+alias man='env LANG=C man'
+alias jman='env LANG=ja_JP.UTF-8 man'
+
 ############
 ### 関数 ###
 ############
@@ -480,6 +484,28 @@ GREP_OPTIONS="${GREP_OPTIONS} --binary-files=without-match"
 #[[ ~/.zpreztorc -nt ~/.zpreztorc.zwc ]] && zcompile ~/.zpreztorc
 #[[ ~/.zcompdump -nt ~/.zcompdump.zwc ]] && zcompile ~/.zcompdump
 
+
+
+# To enable shims and autocompletion add to your profile:
+if which rbenv > /dev/null; then
+    export PATH="/Volumes/Users/ats/.rbenv/shims:${PATH}"
+    source "/usr/local/Cellar/rbenv/0.4.0/libexec/../completions/rbenv.zsh"
+    rbenv rehash 2>/dev/null
+    rbenv() {
+      typeset command
+      command="$1"
+      if [ "$#" -gt 0 ]; then
+        shift
+      fi
+
+      case "$command" in
+      rehash|shell)
+        eval `rbenv "sh-$command" "$@"`;;
+      *)
+        command rbenv "$command" "$@";;
+      esac
+    }
+fi
 
 ### brew install pyenvしたら (preztoのpythonモジュールでカバーされる)
 # To use Homebrew's directories rather than ~/.pyenv add to your profile:
