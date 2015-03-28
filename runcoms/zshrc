@@ -207,7 +207,7 @@ function ll. () { ll -d $@ .* }
 alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
 
 # rm
-if [ -x /usr/local/bin/trash ]; then
+which trash >/dev/null && if [[ -n $DISPLAY ]]; then
     alias rm="trash"
 #elif [ -x ~/bin/mv2trash ]; then
 #    alias rm="mv2trash"
@@ -484,7 +484,23 @@ GREP_OPTIONS="${GREP_OPTIONS} --binary-files=without-match"
 #[[ ~/.zpreztorc -nt ~/.zpreztorc.zwc ]] && zcompile ~/.zpreztorc
 #[[ ~/.zcompdump -nt ~/.zcompdump.zwc ]] && zcompile ~/.zcompdump
 
-
+# tmux 対応 ssh-agentの起動スクリプト
+# http://blog.manaten.net/entry/ssh-agent-forward
+AGENT_SOCK_FILE="/tmp/ssh-agent-$USER"
+SSH_AGENT_FILE="$HOME/.ssh-agent-info"
+if test $SSH_AUTH_SOCK ; then
+  if [ $SSH_AUTH_SOCK != $AGENT_SOCK_FILE ] ; then
+    ln -sf $SSH_AUTH_SOCK $AGENT_SOCK_FILE
+    export SSH_AUTH_SOCK=$AGENT_SOCK_FILE
+  fi
+else
+  test -f $SSH_AGENT_FILE && source $SSH_AGENT_FILE
+  if ! ssh-add -l >& /dev/null ; then
+    ssh-agent >! $SSH_AGENT_FILE
+    source $SSH_AGENT_FILE
+    ssh-add
+  fi
+fi
 
 # To enable shims and autocompletion add to your profile:
 if which rbenv > /dev/null; then
