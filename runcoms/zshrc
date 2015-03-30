@@ -336,7 +336,7 @@ autoload -Uz symlink-zfuncs
 
 ## どちらを使うか
 if which peco >/dev/null 2>&1; then
-    export PERCOL=peco  # (percol|peco)
+    export PERCOL='peco --layout=bottom-up'  # (percol|peco)
 elif which percol >/dev/null 2>&1; then
     export PERCOL=percol  # (percol|peco)
 fi

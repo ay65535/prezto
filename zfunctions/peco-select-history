@@ -2,7 +2,9 @@
 # Pecoを導入してzshのhistoryに使うようにした
 # http://blog.kenjiskywalker.org/blog/2014/06/12/peco/
 local tac
-if which tac > /dev/null; then
+if which gtac >/dev/null; then
+    tac="gtac"
+elif which tac >/dev/null; then
     tac="tac"
 else
     tac="tail -r"
@@ -15,7 +17,7 @@ local buffer
 buffer=$(cat $HISTFILE | \
     perl -pe 's/\\'$'\n''(?!:)/¶/g; s/^: [0-9]+:[0-9];//' | \
     eval $tac | \
-    $PERCOL --layout=bottom-up --query "$LBUFFER" | \
+    $PERCOL --query "$LBUFFER" | \
     perl -pe "s,¶,"$'\n'",g")
 if [[ ! -z $buffer ]]; then
     BUFFER=$buffer
