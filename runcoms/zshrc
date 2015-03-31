@@ -336,7 +336,7 @@ autoload -Uz symlink-zfuncs
 
 ## どちらを使うか
 if which peco >/dev/null 2>&1; then
-    export PERCOL='peco --layout=bottom-up'  # (percol|peco)
+    export PERCOL=peco  # (percol|peco)
 elif which percol >/dev/null 2>&1; then
     export PERCOL=percol  # (percol|peco)
 fi
@@ -365,7 +365,7 @@ fi
 
 function exists { which $1 &> /dev/null }
 
-if exists $PERCOL; then
+if [[ -n PERCOL ]]; then
     ##
     # Pecoを導入してzshのhistoryに使うようにした
     # http://blog.kenjiskywalker.org/blog/2014/06/12/peco/
