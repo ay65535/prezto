@@ -126,7 +126,7 @@ export MYSQL_HISTFILE=${CLOUD_CACHE_HOME}/mysql/mysql_history
 
 # 履歴の保存先
 if [[ -d ${CLOUD_CACHE_HOME}/zsh ]]; then
-    HISTFILE=${CLOUD_CACHE_HOME}/zsh/zhistory
+  HISTFILE=${CLOUD_CACHE_HOME}/zsh/zhistory
 #elif [[ -d ${XDG_CACHE_HOME}/zsh ]]; then
 #    HISTFILE=${XDG_CACHE_HOME}/zsh/zhistory
 #elif [[ -e "${ZDOTDIR:-$HOME}"/.zsh_history ]]; then
@@ -152,7 +152,7 @@ if [[ -d ${CLOUD_CACHE_HOME}/zsh ]]; then
 # elif [[ -d ~ats/Dropbox/Shared/profiles/.zsh && $DOMAINNAME != "ed.ritsumei.ac.jp" ]]; then
 #     HISTFILE=~ats/Dropbox/Shared/profiles/.zsh/zsh_history
 else
-    HISTFILE=~/.zsh_history
+  HISTFILE=~/.zsh_history
 fi
 ## メモリに展開する履歴の数
 HISTSIZE=18000
@@ -165,10 +165,10 @@ WORDCHARS=${WORDCHARS:s,/,,}
 # fpathの設定
 ## 最初の ${fpath} はpreztoのmoduleに必要
 fpath=(
-    /usr/local/share/zsh/site-functions(N-/)  # preztoのzsh-completionsよりもHomebrewのやつを優先
-    /usr/local/Cellar/zsh/5.0.6/share/zsh/functions(N-/)  # preztoのzsh-completionsよりもHomebrewのやつを優先
-    #/usr/local/share/zsh/functions(N-/)
-    ${fpath}
+  /usr/local/share/zsh/site-functions(N-/)  # preztoのzsh-completionsよりもHomebrewのやつを優先
+  /usr/local/Cellar/zsh/5.0.6/share/zsh/functions(N-/)  # preztoのzsh-completionsよりもHomebrewのやつを優先
+  #/usr/local/share/zsh/functions(N-/)
+  ${fpath}
 )
 
 #############
@@ -189,17 +189,18 @@ alias sudo='sudo ' # sudo時もこのzshrcを読むようにする
 
 # ls
 case "${OSTYPE}" in
-freebsd*|darwin*)
+  freebsd*|darwin*)
     alias ls='ls -FG'
     alias gls="gls -F --color=auto" # coreutilsのGNU ls 使う場合
     ;;
-linux*|cygwin)
+  linux*|cygwin)
     alias ls="ls -F --color=auto"
     ;;
 esac
 alias la='ls -A'
 alias lla='ll -a'
 alias ｌｓ="ls"
+alias latr='lla -tr'
 function l. () { ls -d $@ .* }
 function ll. () { ll -d $@ .* }
 
@@ -207,12 +208,13 @@ function ll. () { ll -d $@ .* }
 alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
 
 # rm
-which trash >/dev/null && if [[ -n $DISPLAY ]]; then
-    alias rm="trash"
+which trash >/dev/null && TRASH=$?
+if [[ -n TRASH && -n DISPLAY ]]; then
+  alias rm="trash"
 #elif [ -x ~/bin/mv2trash ]; then
 #    alias rm="mv2trash"
 else
-    alias rm='nocorrect rm -i'
+  alias rm='nocorrect rm -i'
 fi
 
 alias which="which -a"
@@ -222,15 +224,15 @@ alias rsyncmac="rsync --exclude='.DS_Store'"
 
 # emacs
 if [ -d /usr/local/Cellar/emacs ]; then
-    alias em='open -a Emacs'
-    alias enw='/usr/local/bin/emacs -nw'
-    alias emacs='/usr/bin/emacs -nw'
+  alias em='open -a Emacs'
+  alias enw='/usr/local/bin/emacs -nw'
+  alias emacs='/usr/bin/emacs -nw'
 # elif [ -d /Applications/MacPorts/Emacs.app ]; then
 #   alias em='open -a /Applications/MacPorts/Emacs.app'
 #   alias enw='/Applications/MacPorts/Emacs.app/Contents/MacOS/Emacs -nw'
 #   #alias emacs='/usr/bin/emacs -nw'
 else
-    alias enw='emacs -nw'
+  alias enw='emacs -nw'
 fi
 
 # sublime
@@ -288,20 +290,20 @@ alias jman='env LANG=ja_JP.UTF-8 man'
 ############
 
 zshaddhistory() {
-    # http://www.pyon.net/2014/02/01/index.html
-    unsetopt sh_word_split # sh_word_splitが有効だとエラーになる。
-    local line=${1%%$'\n'}
-    local cmd=${line%% *}
+  # http://www.pyon.net/2014/02/01/index.html
+  unsetopt sh_word_split # sh_word_splitが有効だとエラーになる。
+  local line=${1%%$'\n'}
+  local cmd=${line%% *}
 
-    # 以下の条件をすべて満たすものだけをヒストリに追加する
-    [[ ${#line} -ge 3
-        #&& ${cmd} != l[sal]
-        && ${cmd} != cd
-        #&& ${cmd} != (m|man)
-        #&& ${line} != "dropbox.py start"
-        #&& ${line} != "dropbox.py status"
-        && ${line} != pwd
-    ]]
+  # 以下の条件をすべて満たすものだけをヒストリに追加する
+  [[ ${#line} -ge 3
+    #&& ${cmd} != l[sal]
+    && ${cmd} != cd
+    #&& ${cmd} != (m|man)
+    #&& ${line} != "dropbox.py start"
+    #&& ${line} != "dropbox.py status"
+    && ${line} != pwd
+  ]]
 }
 
 # 全履歴の一覧を出力する
@@ -336,9 +338,9 @@ autoload -Uz symlink-zfuncs
 
 ## どちらを使うか
 if which peco >/dev/null 2>&1; then
-    export PERCOL=peco  # (percol|peco)
+  export PERCOL=peco  # (percol|peco)
 elif which percol >/dev/null 2>&1; then
-    export PERCOL=percol  # (percol|peco)
+  export PERCOL=percol  # (percol|peco)
 fi
 
 ###
@@ -366,77 +368,77 @@ fi
 function exists { which $1 &> /dev/null }
 
 if [[ -n PERCOL ]]; then
-    ##
-    # Pecoを導入してzshのhistoryに使うようにした
-    # http://blog.kenjiskywalker.org/blog/2014/06/12/peco/
-    autoload -Uz peco-select-history
-    zle -N peco-select-history
-    bindkey '^r' peco-select-history
+  ##
+  # Pecoを導入してzshのhistoryに使うようにした
+  # http://blog.kenjiskywalker.org/blog/2014/06/12/peco/
+  autoload -Uz peco-select-history
+  zle -N peco-select-history
+  bindkey '^r' peco-select-history
 
-    # pecoで履歴からマッチするキーワードをその場に補完
-    # ( https://gist.github.com/anonymous/19bbb1eadf4f1c6bd761 )
-    autoload -Uz in_place_history_keyword_completion
-    zle -N in_place_history_keyword_completion
-    bindkey '^X^I' in_place_history_keyword_completion
+  # pecoで履歴からマッチするキーワードをその場に補完
+  # ( https://gist.github.com/anonymous/19bbb1eadf4f1c6bd761 )
+  autoload -Uz in_place_history_keyword_completion
+  zle -N in_place_history_keyword_completion
+  bindkey '^X^I' in_place_history_keyword_completion
 
-    # peco/percolでCUIなスニペットツールを作ってみる
-    # ( http://blog.glidenote.com/blog/2014/06/26/snippets-peco-percol/ )
-    autoload -Uz peco-snippets
-    zle -N peco-snippets
-    bindkey '^x^s' peco-snippets
+  # peco/percolでCUIなスニペットツールを作ってみる
+  # ( http://blog.glidenote.com/blog/2014/06/26/snippets-peco-percol/ )
+  autoload -Uz peco-snippets
+  zle -N peco-snippets
+  bindkey '^x^s' peco-snippets
 
-    # zshでcdの履歴管理に標準添付のcdrを使う ( http://blog.n-z.jp/blog/2013-11-12-zsh-cdr.html )
-    if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
-        autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
-        add-zsh-hook chpwd chpwd_recent_dirs
-        zstyle ':completion:*:*:cdr:*:*' menu selection
-        zstyle ':completion:*' recent-dirs-insert both
-        zstyle ':chpwd:*' recent-dirs-max 500
-        zstyle ':chpwd:*' recent-dirs-default true
-        zstyle ':chpwd:*' recent-dirs-file "${XDG_CACHE_HOME:-$HOME/.cache}/shell/chpwd-recent-dirs-${HOST%%.*}"
-        zstyle ':chpwd:*' recent-dirs-pushd true
-        #zstyle ':chpwd:*' recent-dirs-prune 'GDCx'
-        #zstyle ':chpwd:*' recent-dirs-prune '/tmp(|/*)'
-    fi
+  # zshでcdの履歴管理に標準添付のcdrを使う ( http://blog.n-z.jp/blog/2013-11-12-zsh-cdr.html )
+  if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
+    autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+    add-zsh-hook chpwd chpwd_recent_dirs
+    zstyle ':completion:*:*:cdr:*:*' menu selection
+    zstyle ':completion:*' recent-dirs-insert both
+    zstyle ':chpwd:*' recent-dirs-max 500
+    zstyle ':chpwd:*' recent-dirs-default true
+    zstyle ':chpwd:*' recent-dirs-file "${XDG_CACHE_HOME:-$HOME/.cache}/shell/chpwd-recent-dirs-${HOST%%.*}"
+    zstyle ':chpwd:*' recent-dirs-pushd true
+    #zstyle ':chpwd:*' recent-dirs-prune 'GDCx'
+    #zstyle ':chpwd:*' recent-dirs-prune '/tmp(|/*)'
+  fi
 
-    # 最近訪れたディレクトリにpecoで行けるようにするやつ。cdr -l使うと便利にできる。
-    # ( http://shibayu36.hatenablog.com/entry/2014/06/27/223538 )
-    autoload -Uz peco-cdr
-    zle -N peco-cdr
-    bindkey '^@' peco-cdr
+  # 最近訪れたディレクトリにpecoで行けるようにするやつ。cdr -l使うと便利にできる。
+  # ( http://shibayu36.hatenablog.com/entry/2014/06/27/223538 )
+  autoload -Uz peco-cdr
+  zle -N peco-cdr
+  bindkey '^@' peco-cdr
 
-    # zshとpecoでワンライナー呼び出し
-    # http://qiita.com/jpshadowapps/items/4c6795f2e67fdedbabf0
-    ONELINER_DIR=${CLOUD_DATA_HOME:-${XDG_DATA_HOME:-$HOME}}
-    ONELINER_TXT=${ONELINER_DIR}/snippets
-    ONELINER_PARAM_MARKER_PREFIX="%%"
-    # ワンライナー登録
-    autoload -Uz _insert-oneliner
-    zle -N _insert-oneliner
-    bindkey "^[i" _insert-oneliner
+  # zshとpecoでワンライナー呼び出し
+  # http://qiita.com/jpshadowapps/items/4c6795f2e67fdedbabf0
+  ONELINER_DIR=${CLOUD_DATA_HOME:-${XDG_DATA_HOME:-$HOME}}
+  ONELINER_TXT=${ONELINER_DIR}/snippets
+  ONELINER_PARAM_MARKER_PREFIX="%%"
+  # ワンライナー登録
+  autoload -Uz _insert-oneliner
+  zle -N _insert-oneliner
+  bindkey "^[i" _insert-oneliner
 
-    # コマンドライン上の可変パラメータ(%%HOGE)を置換
-    autoload -Uz _kill-oneliner-param-forward
-    zle -N _kill-oneliner-param-forward
-    bindkey "^[j" _kill-oneliner-param-forward
+  # コマンドライン上の可変パラメータ(%%HOGE)を置換
+  autoload -Uz _kill-oneliner-param-forward
+  zle -N _kill-oneliner-param-forward
+  bindkey "^[j" _kill-oneliner-param-forward
 
-    # ghqを使ったローカルリポジトリの統一的・効率的な管理について - delirious thoughts
-    # http://blog.kentarok.org/entry/2014/06/03/135300
-    # ghqのローカルリポジトリ一覧
-    autoload -Uz peco-src
-    zle -N peco-src
-    bindkey '^X^G' peco-src
-    # goのdoc参照
-    autoload -Uz peco-godoc
-    zle -N peco-godoc
-    bindkey '^X^D' peco-godoc
+  # ghqを使ったローカルリポジトリの統一的・効率的な管理について - delirious thoughts
+  # http://blog.kentarok.org/entry/2014/06/03/135300
+  # ghqのローカルリポジトリ一覧
+  autoload -Uz peco-src
+  zle -N peco-src
+  bindkey '^X^G' peco-src
+  # goのdoc参照
+  autoload -Uz peco-godoc
+  zle -N peco-godoc
+  bindkey '^X^D' peco-godoc
 fi
 
 ##
 # goの補完関数読み込み
 # (現状はautoloadで読み込める _go の形式になってないっぽい？)
 if [[ -x /usr/local/bin/_go ]]; then
-    source /usr/local/share/zsh/site-functions/_go
+  source /usr/local/share/zsh/site-functions/_go
 fi
 
 ####################
@@ -490,39 +492,39 @@ if [[ -z DISPLAY ]]; then
   AGENT_SOCK_FILE="/tmp/ssh-agent-$USER"
   SSH_AGENT_FILE="$HOME/.ssh-agent-info"
   if test $SSH_AUTH_SOCK ; then
-    if [ $SSH_AUTH_SOCK != $AGENT_SOCK_FILE ] ; then
-      ln -sf $SSH_AUTH_SOCK $AGENT_SOCK_FILE
-      export SSH_AUTH_SOCK=$AGENT_SOCK_FILE
-    fi
+  if [ $SSH_AUTH_SOCK != $AGENT_SOCK_FILE ] ; then
+    ln -sf $SSH_AUTH_SOCK $AGENT_SOCK_FILE
+    export SSH_AUTH_SOCK=$AGENT_SOCK_FILE
+  fi
   else
-    test -f $SSH_AGENT_FILE && source $SSH_AGENT_FILE
-    if ! ssh-add -l >& /dev/null ; then
-      ssh-agent >! $SSH_AGENT_FILE
-      source $SSH_AGENT_FILE
-      ssh-add
-    fi
+  test -f $SSH_AGENT_FILE && source $SSH_AGENT_FILE
+  if ! ssh-add -l >& /dev/null ; then
+    ssh-agent >! $SSH_AGENT_FILE
+    source $SSH_AGENT_FILE
+    ssh-add
+  fi
   fi
 fi
 
 # To enable shims and autocompletion add to your profile:
 if which rbenv > /dev/null; then
-    export PATH="/Volumes/Users/ats/.rbenv/shims:${PATH}"
-    source "/usr/local/Cellar/rbenv/0.4.0/libexec/../completions/rbenv.zsh"
-    rbenv rehash 2>/dev/null
-    rbenv() {
-      typeset command
-      command="$1"
-      if [ "$#" -gt 0 ]; then
-        shift
-      fi
+  export PATH="/Volumes/Users/ats/.rbenv/shims:${PATH}"
+  source "/usr/local/Cellar/rbenv/0.4.0/libexec/../completions/rbenv.zsh"
+  rbenv rehash 2>/dev/null
+  rbenv() {
+    typeset command
+    command="$1"
+    if [ "$#" -gt 0 ]; then
+    shift
+    fi
 
-      case "$command" in
-      rehash|shell)
-        eval `rbenv "sh-$command" "$@"`;;
-      *)
-        command rbenv "$command" "$@";;
-      esac
-    }
+    case "$command" in
+    rehash|shell)
+    eval `rbenv "sh-$command" "$@"`;;
+    *)
+    command rbenv "$command" "$@";;
+    esac
+  }
 fi
 
 ### brew install pyenvしたら (preztoのpythonモジュールでカバーされる)
@@ -533,26 +535,26 @@ fi
 #if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # pyenv init - zsh の実行内容
 if which pyenv > /dev/null; then
-    #export PATH="${PYENV_ROOT}/shims:${PATH}"
-    export PATH="/usr/local/opt/pyenv/shims:${PATH}"
-    export PYENV_SHELL=zsh
-    #source /usr/local/Cellar/pyenv/201*/completions/pyenv.zsh
-    source '/usr/local/Cellar/pyenv/20150226/libexec/../completions/pyenv.zsh'
-    pyenv rehash 2>/dev/null
-    pyenv() {
-        local command
-        command="$1"
-        if [ "$#" -gt 0 ]; then
-            shift
-        fi
+  #export PATH="${PYENV_ROOT}/shims:${PATH}"
+  export PATH="/usr/local/opt/pyenv/shims:${PATH}"
+  export PYENV_SHELL=zsh
+  #source /usr/local/Cellar/pyenv/201*/completions/pyenv.zsh
+  source '/usr/local/Cellar/pyenv/20150226/libexec/../completions/pyenv.zsh'
+  pyenv rehash 2>/dev/null
+  pyenv() {
+    local command
+    command="$1"
+    if [ "$#" -gt 0 ]; then
+      shift
+    fi
 
-        case "$command" in
-            activate|deactivate|rehash|shell)
-                eval "`pyenv "sh-$command" "$@"`";;
-            *)
-                command pyenv "$command" "$@";;
-        esac
-    }
+    case "$command" in
+      activate|deactivate|rehash|shell)
+        eval "`pyenv "sh-$command" "$@"`";;
+      *)
+        command pyenv "$command" "$@";;
+    esac
+  }
 fi
 
 ### brew install pyenv-virtualenv したなら (preztoのpythonモジュールでカバーされない？)
@@ -560,32 +562,32 @@ fi
 #if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 # pyenv virtualenv-init - zsh の実行内容
 if which pyenv-virtualenv-init > /dev/null; then
-    export PYENV_VIRTUALENV_INIT=1;
-    _pyenv_virtualenv_hook() {
-        if [ -n "$PYENV_ACTIVATE" ]; then
-            if [ "$(pyenv version-name 2>/dev/null || true)" = "system" ]; then
-                pyenv deactivate --no-error --verbose
-                unset PYENV_DEACTIVATE
-                return 0
-            fi
-            if [ "$PYENV_ACTIVATE" != "$(pyenv prefix 2>/dev/null || true)" ]; then
-                if pyenv deactivate --no-error --verbose; then
-                    unset PYENV_DEACTIVATE
-                    pyenv activate --no-error --verbose || unset PYENV_DEACTIVATE
-                else
-                    pyenv activate --no-error --verbose
-                fi
-            fi
+  export PYENV_VIRTUALENV_INIT=1;
+  _pyenv_virtualenv_hook() {
+    if [ -n "$PYENV_ACTIVATE" ]; then
+      if [ "$(pyenv version-name 2>/dev/null || true)" = "system" ]; then
+        pyenv deactivate --no-error --verbose
+        unset PYENV_DEACTIVATE
+        return 0
+      fi
+      if [ "$PYENV_ACTIVATE" != "$(pyenv prefix 2>/dev/null || true)" ]; then
+        if pyenv deactivate --no-error --verbose; then
+          unset PYENV_DEACTIVATE
+          pyenv activate --no-error --verbose || unset PYENV_DEACTIVATE
         else
-            if [ -z "$VIRTUAL_ENV" ] && [ "$PYENV_DEACTIVATE" != "$(pyenv prefix 2>/dev/null || true)" ]; then
-              pyenv activate --no-error --verbose
-            fi
+          pyenv activate --no-error --verbose
         fi
-    };
-    typeset -a precmd_functions
-    if [[ -z $precmd_functions[(r)_pyenv_virtualenv_hook] ]]; then
-        precmd_functions+=_pyenv_virtualenv_hook;
+      fi
+    else
+      if [ -z "$VIRTUAL_ENV" ] && [ "$PYENV_DEACTIVATE" != "$(pyenv prefix 2>/dev/null || true)" ]; then
+        pyenv activate --no-error --verbose
+      fi
     fi
+  };
+  typeset -a precmd_functions
+  if [[ -z $precmd_functions[(r)_pyenv_virtualenv_hook] ]]; then
+    precmd_functions+=_pyenv_virtualenv_hook;
+  fi
 fi
 
 ### Pythonのvirtualenvwrapper用 (preztoのpythonモジュールでカバーされる)
@@ -598,28 +600,28 @@ fi
 ### preztoのpythonモジュールを変更したやつ
 # Load virtualenvwrapper into the shell session.
 if which virtualenvwrapper_lazy > /dev/null; then
-    # Set the directory where virtual environments are stored.
-    export WORKON_HOME="$HOME/.virtualenvs"
+  # Set the directory where virtual environments are stored.
+  export WORKON_HOME="$HOME/.virtualenvs"
 
-    # Disable the virtualenv prompt.
-    VIRTUAL_ENV_DISABLE_PROMPT=1
+  # Disable the virtualenv prompt.
+  VIRTUAL_ENV_DISABLE_PROMPT=1
 
-    ### Using pyenv virtualenvwrapper
-    # To setup a virtualenvwrapper into your shell, just run pyenv virtualenvwrapper. For example,
-    # $ pyenv virtualenvwrapper
-    # or, if you favor virtualenvwrapper_lazy.sh,
-    # $ pyenv virtualenvwrapper_lazy
-    pyenv virtualenvwrapper_lazy
+  ### Using pyenv virtualenvwrapper
+  # To setup a virtualenvwrapper into your shell, just run pyenv virtualenvwrapper. For example,
+  # $ pyenv virtualenvwrapper
+  # or, if you favor virtualenvwrapper_lazy.sh,
+  # $ pyenv virtualenvwrapper_lazy
+  pyenv virtualenvwrapper_lazy
 
-    ### Using pyvenv instead of virtualenv
-    # To get virtualenvwrapper to create a virtual environment using pyvenv instead of virtualenv,
-    # set the PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV environment variable. For example,
-    # set the following in your shell initialization config:
-    #export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-    # After you start a new shell with that variable set and initialize via pyenv virtualenvwrapper
-    # or pyenv virtualenvwrapper_lazy, any virtual environments created from that shell using
-    # mkvirtualenv will be created using pyvenv if it is available in the active Python version
-    # (pyvenv is in Python 3.3 or later).
+  ### Using pyvenv instead of virtualenv
+  # To get virtualenvwrapper to create a virtual environment using pyvenv instead of virtualenv,
+  # set the PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV environment variable. For example,
+  # set the following in your shell initialization config:
+  #export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+  # After you start a new shell with that variable set and initialize via pyenv virtualenvwrapper
+  # or pyenv virtualenvwrapper_lazy, any virtual environments created from that shell using
+  # mkvirtualenv will be created using pyvenv if it is available in the active Python version
+  # (pyvenv is in Python 3.3 or later).
 fi
 
 # added by travis gem
@@ -634,9 +636,9 @@ fi
 ##
 # docker
 if [[ -f ~/.boot2docker/boot2docker.iso ]]; then
-    export DOCKER_TLS_VERIFY=1
-    export DOCKER_HOST=tcp://$(boot2docker ip 2>/dev/null):2376
-    export DOCKER_CERT_PATH=~/.boot2docker/certs/boot2docker-vm
+  export DOCKER_TLS_VERIFY=1
+  export DOCKER_HOST=tcp://$(boot2docker ip 2>/dev/null):2376
+  export DOCKER_CERT_PATH=~/.boot2docker/certs/boot2docker-vm
 fi
 
 
@@ -644,18 +646,18 @@ fi
 [[ -s "${HOME}/.gvm/bin/gvm-init.sh" ]] && source "${HOME}/.gvm/bin/gvm-init.sh"
 
 if [[ "$ZVERVOSE_MODE" = true ]]; then
-    setopt >! ~/set_opts_5_zshrc.txt
-    functions >! ~/set_functions_5_zshrc.txt
-    export >! ~/set_exports_5_zshrc.txt
-    echo "MANPATH=$MANPATH" >>! ~/set_exports_5_zshrc.txt
-    echo "fpath=$fpath" >>! ~/set_exports_5_zshrc.txt
-    echo ".zshrc loaded!" >>! ~/set_zsh.txt
+  setopt >! ~/set_opts_5_zshrc.txt
+  functions >! ~/set_functions_5_zshrc.txt
+  export >! ~/set_exports_5_zshrc.txt
+  echo "MANPATH=$MANPATH" >>! ~/set_exports_5_zshrc.txt
+  echo "fpath=$fpath" >>! ~/set_exports_5_zshrc.txt
+  echo ".zshrc loaded!" >>! ~/set_zsh.txt
 fi
 
 # zsh プロファイリング用
 if [[ "$ZPROF_MODE" = true ]]; then
-    if (which zprof > /dev/null) ;then
-        #zprof > ~/GoogleDrive/dotfiles/zprof_"${USER}@${HOST%.local}"_prezto_`date +%y%m%d%H%M`.txt
-        zprof | less
-    fi
+  if (which zprof > /dev/null) ;then
+    #zprof > ~/GoogleDrive/dotfiles/zprof_"${USER}@${HOST%.local}"_prezto_`date +%y%m%d%H%M`.txt
+    zprof | less
+  fi
 fi
