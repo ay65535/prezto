@@ -249,7 +249,8 @@ fi
 # Rubyの設定 (brew install rubyのみ)
 path=(
     $path
-    /usr/local/Cellar/ruby/HEAD/bin(N-/)
+    #/usr/local/Cellar/ruby/HEAD/bin(N-/)
+    /usr/local/Cellar/ruby/*/bin(N-/)
     )
 # Rubyの設定 (brew install rbenv)
 # To use Homebrew's directories rather than ~/.rbenv add to your profile:

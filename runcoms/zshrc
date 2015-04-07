@@ -1,3 +1,4 @@
+#!/usr/bin/env zsh
 #
 # Executes commands at the start of an interactive session.
 #
@@ -19,7 +20,6 @@ if [[ -d ~/.yadr ]]; then
   for config_file ($HOME/.yadr/zsh/*.zsh) source $config_file
 fi
 
-#!/usr/bin/env zsh
 ########################################################
 ##### from tsushima kun
 
