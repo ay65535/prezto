@@ -34,11 +34,12 @@ zstyle ':prezto:load' pmodule \
   'spectrum' \
   'utility' \
   'completion' \
-  'homebrew' \
+  'archive' \
   'git' \
-  'ruby' \
-  'python' \
+  'osx' \
+  'tmux' \
   'syntax-highlighting' \
+  'ssh' \
   'prompt'
 
 #
@@ -99,12 +100,12 @@ zstyle ':prezto:module:editor' key-bindings 'emacs'
 # Set the prompt theme to load.
 # Setting it to 'random' loads a random theme.
 # Auto set to 'off' on dumb terminals.
-if [[ "$HOST" == iMac* ]]; then
-	zstyle ':prezto:module:prompt' theme 'sorin'
-elif [[ "$HOST" == MacBook* ]]; then
-  zstyle ':prezto:module:prompt' theme 'skwp_mod'
-else
+if [[ "$HOST" == *iMac* ]]; then
+  zstyle ':prezto:module:prompt' theme 'sorin'
+elif [[ "$HOST" == *MacBook* ]]; then
   zstyle ':prezto:module:prompt' theme 'steeef_modified'
+else
+  zstyle ':prezto:module:prompt' theme 'skwp_mod'
 fi
 
 #
@@ -130,6 +131,7 @@ fi
 
 # Set the SSH identities to load into the agent.
 # zstyle ':prezto:module:ssh:load' identities 'id_rsa' 'id_rsa2' 'id_github'
+zstyle ':prezto:module:ssh:load' identities 'id_rsa' 'github_rsa'
 
 #
 # Syntax Highlighting
@@ -176,7 +178,7 @@ fi
 # zstyle ':prezto:module:tmux:auto-start' remote 'yes'
 
 # Integrate with iTerm2.
-# zstyle ':prezto:module:tmux:iterm' integrate 'yes'
+zstyle ':prezto:module:tmux:iterm' integrate 'yes'
 
 if [[ "$ZVERVOSE_MODE" = true ]]; then
   setopt >! ~/set_opts_4_zpreztorc.txt
