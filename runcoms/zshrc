@@ -509,7 +509,7 @@ fi
 # To enable shims and autocompletion add to your profile:
 if which rbenv > /dev/null; then
   export PATH="${RBENV_ROOT}/shims:${PATH}"
-  source "/usr/local/Cellar/rbenv/0.4.0/libexec/../completions/rbenv.zsh"
+  source "/usr/local/Cellar/rbenv/0.*.*/completions/rbenv.zsh"
   rbenv rehash 2>/dev/null
   rbenv() {
     typeset command
@@ -535,11 +535,9 @@ fi
 #if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # pyenv init - zsh の実行内容
 if which pyenv > /dev/null; then
-  #export PATH="${PYENV_ROOT}/shims:${PATH}"
-  export PATH="/usr/local/opt/pyenv/shims:${PATH}"
+  export PATH="${PYENV_ROOT}/shims:${PATH}"
   export PYENV_SHELL=zsh
-  #source /usr/local/Cellar/pyenv/201*/completions/pyenv.zsh
-  source '/usr/local/Cellar/pyenv/20150326/libexec/../completions/pyenv.zsh'
+  source /usr/local/Cellar/pyenv/2015*/completions/pyenv.zsh
   pyenv rehash 2>/dev/null
   pyenv() {
     local command
