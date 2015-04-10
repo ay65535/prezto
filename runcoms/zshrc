@@ -178,7 +178,7 @@ fpath=(
 # 拡張子に応じたコマンド実行
 alias -s php='php -f'
 alias -s rb='ruby'
-alias -s py='python'
+#alias -s py='python'
 alias -s {gz,tar,zip,rar,7z}='unarchive' # preztoのarchiveモジュールのコマンド(https://github.com/sorin-ionescu/prezto/tree/master/modules)
 
 # exit
