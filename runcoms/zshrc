@@ -209,7 +209,7 @@ alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/La
 
 # rm
 which trash >/dev/null && TRASH=$?
-if [[ -n TRASH && -n DISPLAY ]]; then
+if [[ -n $TRASH && -n $DISPLAY ]]; then
   alias rm="trash"
 #elif [ -x ~/bin/mv2trash ]; then
 #    alias rm="mv2trash"
@@ -509,7 +509,7 @@ fi
 # To enable shims and autocompletion add to your profile:
 if which rbenv > /dev/null; then
   export PATH="${RBENV_ROOT}/shims:${PATH}"
-  source "/usr/local/Cellar/rbenv/0.*.*/completions/rbenv.zsh"
+  source /usr/local/Cellar/rbenv/0.*.*/completions/rbenv.zsh
   rbenv rehash 2>/dev/null
   rbenv() {
     typeset command
