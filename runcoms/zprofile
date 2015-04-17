@@ -118,15 +118,18 @@ path=(
     ${HOME}/bin(N-/)         # スクリプト系 or 各アプリが勝手にインストールするもの
 )
 
-# JAVA_HOMEの設定
-if [[ -z "$JAVA_HOME" ]]; then
-    if [[ -x /usr/libexec/java_home ]]; then
-        export JAVA_HOME=`/usr/libexec/java_home -v 1.8 2>/dev/null` || \
-        export JAVA_HOME=`/usr/libexec/java_home`
-    #elif [[ -d /usr/lib/jvm/java-6-sun/jre ]]; then  # Ubuntu用
-    #    export JAVA_HOME=/usr/lib/jvm/java-6-sun/jre
-    fi
+# JAVA_HOMEの設定  # launchd で JAVA_HOME が 1.6 に設定されてるかもしれないのでもう一度設定
+#if [[ -z "$JAVA_HOME" ]]; then
+if [[ -x /usr/libexec/java_home ]]; then
+    export JAVA_HOME=`/usr/libexec/java_home -v 1.8 2>/dev/null`
+    export JDK_HOME=$JAVA_HOME
+    export JDK6_HOME=`/usr/libexec/java_home -v 1.6 2>/dev/null`
+    export JDK7_HOME=`/usr/libexec/java_home -v 1.7 2>/dev/null`
+    export JDK8_HOME=`/usr/libexec/java_home -v 1.8 2>/dev/null`
+#elif [[ -d /usr/lib/jvm/java-6-sun/jre ]]; then  # Ubuntu用
+#    export JAVA_HOME=/usr/lib/jvm/java-6-sun/jre
 fi
+#fi
 
 # Java の文字化け対策(Mavenとかでの)
 #   (obsolete, java6まで。 see http://piyopiyoducky.net/blog/2013/04/13/java-system-properties-setting-and-character-encoding/)
