@@ -102,6 +102,9 @@ typeset -gU fpath path
 
 # 基本的なパスの設定
 path=(
+    ${HOME}/local/bin(N-/)  # 自分用（--prefix=$HOME/localでインストールしたもの）
+    #${HOME}/.local/bin(N-/)  # 自分用 (環境依存のバイナリなど)
+    ${HOME}/bin(N-/)         # スクリプト系 or 各アプリが勝手にインストールするもの
     /usr/local/bin(N-/)    # Homebrew用
     #/opt/local/bin(N-/)   # MacPorts用
     /usr/bin(N-/)
@@ -113,9 +116,6 @@ path=(
     /opt/X11/bin(N-/)      # X11 / XQuartz
     #/usr/X11/bin(N-/)     # OS X 10.8 からは /opt/X11/bin へのエイリアス
     /usr/texbin(N-/)
-    ${HOME}/local/bin(N-/)  # 自分用（--prefix=$HOME/localでインストールしたもの）
-    #${HOME}/.local/bin(N-/)  # 自分用 (環境依存のバイナリなど)
-    ${HOME}/bin(N-/)         # スクリプト系 or 各アプリが勝手にインストールするもの
 )
 
 # JAVA_HOMEの設定  # launchd で JAVA_HOME が 1.6 に設定されてるかもしれないのでもう一度設定
