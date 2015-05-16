@@ -35,6 +35,16 @@ if [[ -d ~/Dropbox/dotfiles ]]; then
     export CLOUD_CACHE_HOME=${CLOUD_DOT_DIR}/cache  # Do not symlink. so $CLOUD_CACHE_HOME != $XDG_CACHE_HOME
 fi
 
+# クラウドストレージ上の dotfiles.private ディレクトリを指定
+if [[ -d ~/Dropbox/dotfiles.private ]]; then
+    export CLOUD_PRIVATE_DOT_DIR=~/Dropbox/dotfiles.private
+    export CLOUD_PRIVATE_DATA_HOME=${CLOUD_PRIVATE_DOT_DIR}/local/share  # Wineのファイルが環境依存 (パスが違うので共有しない)
+    export CLOUD_PRIVATE_CONFIG_HOME=${CLOUD_PRIVATE_DOT_DIR}/config  # if ln -s $CLOUD_PRIVATE_DOT_DIR/.config $HOME then $CLOUD_PRIVATE_CONFIG_HOME = $XDG_CONFIG_HOME
+    #export CLOUD_PRIVATE_DATA_DIRS=''
+    #export CLOUD_PRIVATE_CONFIG_DIRS=''
+    export CLOUD_PRIVATE_CACHE_HOME=${CLOUD_PRIVATE_DOT_DIR}/cache  # Do not symlink. so $CLOUD_PRIVATE_CACHE_HOME != $XDG_CACHE_HOME
+fi
+
 # XDG Base Directory Specification に対応させてみる
 # ( Ubuntu フォルダー構造 その10 - XDG Base Directory Specificationについて - Ubuntu kledgeb,
 #   http://kledgeb.blogspot.jp/2013/04/ubuntu-10-xdg-base-directory.html )

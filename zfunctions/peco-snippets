@@ -2,5 +2,5 @@
 # ( http://blog.glidenote.com/blog/2014/06/26/snippets-peco-percol/ )
 
 #local SNIPPETS=$(grep -v "^#" ~/.snippets | $PERCOL --query "$LBUFFER" | pbcopy)
-BUFFER=$(grep -v "^#" ${CLOUD_DATA_HOME:-${XDG_DATA_HOME:-HOME}}/snippets | $PERCOL --query "$LBUFFER")
+BUFFER=$(grep -v "^#" ${CLOUD_PRIVATE_DATA_HOME:-${CLOUD_DATA_HOME:-${XDG_DATA_HOME:-HOME}}}/snippets | $PERCOL --query "$LBUFFER")
 zle clear-screen

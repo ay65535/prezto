@@ -216,9 +216,9 @@ STUDIO_PROPERTIES=~/Dropbox/Library/Preferences/AndroidStudio/idea.properties
 # Mac(homebrew)でGoのインストールと、Emacsの環境構築 - ありの日記
 # http://d.hatena.ne.jp/hiro_nemu/20140113/1389620004
 # Goの環境変数設定
-if which go >/dev/null; then
-    export GOROOT=`go env GOROOT`
-    #export GOROOT=/usr/local/opt/go/libexec
+if which go >/dev/null 2>&1; then
+    export GOROOT=`go env GOROOT`  # for Ubuntu / Mac?
+    #export GOROOT=/usr/local/opt/go/libexec  # for Mac
     # ghqを使ったローカルリポジトリの統一的・効率的な管理について - delirious thoughts
     # http://blog.kentarok.org/entry/2014/06/03/135300
     export GOPATH=$HOME/local
