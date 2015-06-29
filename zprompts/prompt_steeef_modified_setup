@@ -96,7 +96,8 @@ function prompt_steeef_modified_setup {
 
   # Define prompts.
   #local prompt_1st=
-  PROMPT=$'\n'"${_prompt_steeef_modified_colors[3]}%n%f %Bat%b ${_prompt_steeef_modified_colors[2]}%m%f %Bin%b ${_prompt_steeef_modified_colors[1]}%~%f "'${vcs_info_msg_0_}'""$'\n'"%(?,${_prompt_steeef_modified_colors[5]},${_prompt_steeef_modified_colors[4]})%(!.#.$)%f "
+  #PROMPT=$'\n'"${_prompt_steeef_modified_colors[3]}%n%f %Bat%b ${_prompt_steeef_modified_colors[2]}%m%f %Bin%b ${_prompt_steeef_modified_colors[1]}%~%f "'${vcs_info_msg_0_}'""$'\n'"%(?,${_prompt_steeef_modified_colors[5]},${_prompt_steeef_modified_colors[4]})%(!.#.$)%f "
+  PROMPT="${_prompt_steeef_modified_colors[3]}%n%f %Bat%b ${_prompt_steeef_modified_colors[2]}%m%f %Bin%b ${_prompt_steeef_modified_colors[1]}%~%f "'${vcs_info_msg_0_}'""$'\n'"%(?,${_prompt_steeef_modified_colors[5]},${_prompt_steeef_modified_colors[4]})%(!.#.$)%f "
   #"'$python_info[virtualenv]'"$ "
   RPROMPT=''
 }
