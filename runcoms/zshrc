@@ -251,6 +251,11 @@ alias brewcI='brew cask install'
 alias brewcl='brew cask list'
 alias brewcs='brew cask search'
 
+# brew file
+if [ -f $(brew --prefix)/etc/brew-wrap ];then
+  source $(brew --prefix)/etc/brew-wrap
+fi
+
 # git hub
 alias hubb='hub browse'
 
