@@ -244,6 +244,7 @@ alias brewo='brew options'
 alias brewI='brew install'
 alias brewd='brew doctor'
 alias brewUd='brew update && brew upgrade --all && brew doctor'
+alias brewcs='brew cask cleanup'
 alias brewcd='brew cask doctor'
 alias brewch='brew cask home'
 alias brewci='brew cask info'
@@ -252,9 +253,14 @@ alias brewcl='brew cask list'
 alias brewcs='brew cask search'
 
 # brew file
-if [ -f $(brew --prefix)/etc/brew-wrap ];then
-  source $(brew --prefix)/etc/brew-wrap
-fi
+# if [ -f $(brew --prefix)/etc/brew-wrap ];then
+#   source $(brew --prefix)/etc/brew-wrap
+# fi
+alias brewfu='brew file update'
+alias brewfi='brew file init'
+alias brewfc='brew file clean'
+alias brewfU='brew file cask_upgrade'
+alias brewwrap='brew file brew'
 
 # git hub
 alias hubb='hub browse'
@@ -495,15 +501,17 @@ GREP_OPTIONS="${GREP_OPTIONS} --binary-files=without-match"
 # Fix SSH auth socket location so agent forwarding works with tmux
 # ( http://stackoverflow.com/a/23187030 )
 if [[ -z $DISPLAY ]]; then
-  if [[ -n $SSH_AUTH_SOCK ]]; then
-    ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+  if ssh-add -l | grep ':' >/dev/null; then
+    if [[ -n $SSH_AUTH_SOCK ]]; then
+      ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+    fi
   fi
 fi
 
 # To enable shims and autocompletion add to your profile:
 if which rbenv > /dev/null; then
   export PATH="${RBENV_ROOT}/shims:${PATH}"
-  source /usr/local/Cellar/rbenv/0.*.*/completions/rbenv.zsh
+  source /usr/local/Cellar/rbenv/*/completions/rbenv.zsh
   rbenv rehash 2>/dev/null
   rbenv() {
     typeset command
@@ -531,7 +539,7 @@ fi
 if which pyenv > /dev/null; then
   export PATH="${PYENV_ROOT}/shims:${PATH}"
   export PYENV_SHELL=zsh
-  source /usr/local/Cellar/pyenv/2015*/completions/pyenv.zsh
+  source /usr/local/Cellar/pyenv/*/completions/pyenv.zsh
   pyenv rehash 2>/dev/null
   pyenv() {
     local command
