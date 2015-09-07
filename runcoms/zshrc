@@ -6,7 +6,7 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
-[[ "$ZVERVOSE_MODE" = true ]] && echo ".zshrc loading!" >>! ~/set_zsh.txt
+[[ "$ZVERVOSE_MODE" = true ]] && echo ".zshrc loading!" >>! /tmp/set_zsh.txt
 
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
@@ -646,12 +646,12 @@ fi
 [[ -s "${HOME}/.gvm/bin/gvm-init.sh" ]] && source "${HOME}/.gvm/bin/gvm-init.sh"
 
 if [[ "$ZVERVOSE_MODE" = true ]]; then
-  setopt >! ~/set_opts_5_zshrc.txt
-  functions >! ~/set_functions_5_zshrc.txt
-  export >! ~/set_exports_5_zshrc.txt
-  echo "MANPATH=$MANPATH" >>! ~/set_exports_5_zshrc.txt
-  echo "fpath=$fpath" >>! ~/set_exports_5_zshrc.txt
-  echo ".zshrc loaded!" >>! ~/set_zsh.txt
+  setopt >! /tmp/set_opts_5_zshrc.txt
+  functions >! /tmp/set_functions_5_zshrc.txt
+  export >! /tmp/set_exports_5_zshrc.txt
+  echo "MANPATH=$MANPATH" >>! /tmp/set_exports_5_zshrc.txt
+  echo "fpath=$fpath" >>! /tmp/set_exports_5_zshrc.txt
+  echo ".zshrc loaded!" >>! /tmp/set_zsh.txt
 fi
 
 # zsh プロファイリング用

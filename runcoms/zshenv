@@ -7,12 +7,12 @@ ZPROF_MODE=false
 [[ $ZPROF_MODE = true ]] && zmodload zsh/zprof && zprof
 
 if [[ "$ZVERVOSE_MODE" = true ]]; then
-    setopt >! ~/set_opts_1_zshinit.txt
-    functions >! ~/set_functions_1_zshinit.txt
-    export >! ~/set_exports_1_zshinit.txt
-    [[ ! -z $MANPATH ]] && echo "MANPATH=$MANPATH" >>! ~/set_exports_1_zshinit.txt
-    echo "fpath=$fpath" >>! ~/set_exports_1_zshinit.txt
-    echo ".zshenv loading!" >! ~/set_zsh.txt
+    setopt >! /tmp/set_opts_1_zshinit.txt
+    functions >! /tmp/set_functions_1_zshinit.txt
+    export >! /tmp/set_exports_1_zshinit.txt
+    [[ ! -z $MANPATH ]] && echo "MANPATH=$MANPATH" >>! /tmp/set_exports_1_zshinit.txt
+    echo "fpath=$fpath" >>! /tmp/set_exports_1_zshinit.txt
+    echo ".zshenv loading!" >>! /tmp/set_zsh.txt
 fi
 
 #
@@ -77,7 +77,7 @@ fi
 
 # Ensure that a non-login, non-interactive shell has a defined environment.
 if [[ "$SHLVL" -eq 1 && ! -o LOGIN && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; then
-  #echo "Ensure that a non-login, non-interactive shell has a defined environment." >>! ~/set_zsh.txt
+  #echo "Ensure that a non-login, non-interactive shell has a defined environment." >>! /tmp/set_zsh.txt
   source "${ZDOTDIR:-$HOME}/.zprofile"
 fi
 
@@ -215,10 +215,10 @@ fi
 #export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--no-site-packages'
 
 if [[ "$ZVERVOSE_MODE" = true ]]; then
-    setopt >! ~/set_opts_2_zshenv.txt
-    functions >! ~/set_functions_2_zshenv.txt
-    export >! ~/set_exports_2_zshenv.txt
-    [[ ! -z $MANPATH ]] && echo "MANPATH=$MANPATH" >>! ~/set_exports_2_zshenv.txt
-    echo "fpath=$fpath" >>! ~/set_exports_2_zshenv.txt
-    echo ".zshenv loaded!" >>! ~/set_zsh.txt
+    setopt >! /tmp/set_opts_2_zshenv.txt
+    functions >! /tmp/set_functions_2_zshenv.txt
+    export >! /tmp/set_exports_2_zshenv.txt
+    [[ ! -z $MANPATH ]] && echo "MANPATH=$MANPATH" >>! /tmp/set_exports_2_zshenv.txt
+    echo "fpath=$fpath" >>! /tmp/set_exports_2_zshenv.txt
+    echo ".zshenv loaded!" >>! /tmp/set_zsh.txt
 fi

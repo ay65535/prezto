@@ -5,7 +5,7 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
-[[ "$ZVERVOSE_MODE" = true ]] && echo ".zprofile loading!" >>! ~/set_zsh.txt
+[[ "$ZVERVOSE_MODE" = true ]] && echo ".zprofile loading!" >>! /tmp/set_zsh.txt
 
 #
 # Browser
@@ -121,7 +121,7 @@ path=(
 # JAVA_HOMEの設定  # launchd で JAVA_HOME が 1.6 に設定されてるかもしれないのでもう一度設定
 #if [[ -z "$JAVA_HOME" ]]; then
 if [[ -x /usr/libexec/java_home ]]; then
-    export JAVA_HOME=`/usr/libexec/java_home -v 1.8 2>/dev/null` || \
+    export JAVA_HOME=`/usr/libexec/java_home -v 1.6 2>/dev/null` || \
     export JAVA_HOME=`/usr/libexec/java_home`
     export JDK_HOME=$JAVA_HOME
     export JDK6_HOME=`/usr/libexec/java_home -v 1.6 2>/dev/null`
@@ -199,15 +199,12 @@ fi
 # http://tools.android.com/tech-docs/configuration/osx-jdk
 #  On Mac OSX, the default version we are using to run the IDE (not to compile your code) is Java 6.
 # This is primarily because the font rendering on Java 6 has full subpixel LCD antialiasing, whereas Java 7 and 8 does not.
-STUDIO_JDK=$(/usr/libexec/java_home -v 1.6 2>/dev/null)
-case "$STUDIO_JDK" in
-    *1.*.* )
-        export STUDIO_JDK=${STUDIO_JDK%/*/*}
-        ;;
-    * )
-        unset STUDIO_JDK
-        ;;
-esac
+# if STUDIO_JDK=$(/usr/libexec/java_home >/dev/null); then
+if [[ -n JAVA_HOME ]]; then
+    export STUDIO_JDK=${JAVA_HOME%/*/*}
+else
+    unset STUDIO_JDK
+fi
 
 export RUBYMINE_JDK=$STUDIO_JDK
 
@@ -527,10 +524,10 @@ export MANPATH
 
 
 if [[ "$ZVERVOSE_MODE" = true ]]; then
-    setopt >! ~/set_opts_3_zprofile.txt
-    functions >! ~/set_functions_3_zprofile.txt
-    export >! ~/set_exports_3_zprofile.txt
-    echo "MANPATH=$MANPATH" >>! ~/set_exports_3_zprofile.txt
-    echo "fpath=$fpath" >>! ~/set_exports_3_zprofile.txt
-    echo ".zprofile loaded!" >>! ~/set_zsh.txt
+    setopt >! /tmp/set_opts_3_zprofile.txt
+    functions >! /tmp/set_functions_3_zprofile.txt
+    export >! /tmp/set_exports_3_zprofile.txt
+    echo "MANPATH=$MANPATH" >>! /tmp/set_exports_3_zprofile.txt
+    echo "fpath=$fpath" >>! /tmp/set_exports_3_zprofile.txt
+    echo ".zprofile loaded!" >>! /tmp/set_zsh.txt
 fi
