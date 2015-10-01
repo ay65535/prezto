@@ -500,10 +500,12 @@ GREP_OPTIONS="${GREP_OPTIONS} --binary-files=without-match"
 
 # Fix SSH auth socket location so agent forwarding works with tmux
 # ( http://stackoverflow.com/a/23187030 )
-if [[ -z $DISPLAY ]]; then
-  if ssh-add -l | grep ':' >/dev/null; then
-    if [[ -n $SSH_AUTH_SOCK ]]; then
-      ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+if [[ "$SHLVL" != "1" ]]; then
+  if [[ -z $DISPLAY ]]; then
+    if ssh-add -l | grep ':' >/dev/null; then
+      if [[ -n $SSH_AUTH_SOCK ]]; then
+        ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+      fi
     fi
   fi
 fi
