@@ -175,47 +175,15 @@ fpath=(
 ## aliases ##
 #############
 
+source $CLOUD_CONFIG_HOME/sh/aliases.sh
+
 # 拡張子に応じたコマンド実行
 alias -s php='php -f'
 alias -s rb='ruby'
 #alias -s py='python'
 alias -s {gz,tar,zip,rar,7z}='unarchive' # preztoのarchiveモジュールのコマンド(https://github.com/sorin-ionescu/prezto/tree/master/modules)
 
-# exit
-alias q=exit
-alias ｑ=exit
-
 alias sudo='sudo ' # sudo時もこのzshrcを読むようにする
-
-# ls
-case "${OSTYPE}" in
-  freebsd*|darwin*)
-    alias ls='ls -FG'
-    alias gls="gls -F --color=auto" # coreutilsのGNU ls 使う場合
-    ;;
-  linux*|cygwin)
-    alias ls="ls -F --color=auto"
-    ;;
-esac
-alias la='ls -A'
-alias lla='ll -a'
-alias ｌｓ="ls"
-alias latr='lla -tr'
-function l. () { ls -d $@ .* }
-function ll. () { ll -d $@ .* }
-
-# Clean up LaunchServices to remove duplicates in the “Open With” menu
-alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
-
-# rm
-which trash >/dev/null && TRASH=$?
-if [[ -n $TRASH && -n $DISPLAY ]]; then
-  alias rm="trash"
-#elif [ -x ~/bin/mv2trash ]; then
-#    alias rm="mv2trash"
-else
-  alias rm='nocorrect rm -i'
-fi
 
 alias which="which -a"
 alias ln='nocorrect ln -i -v'
@@ -235,36 +203,6 @@ else
   alias enw='emacs -nw'
 fi
 
-# sublime
-alias s=subl
-
-# Homebrew (preztoで定義されているもの以外)
-alias brewi='brew info'
-alias brewo='brew options'
-alias brewI='brew install'
-alias brewd='brew doctor'
-alias brewUd='brew update && brew upgrade --all && brew doctor'
-alias brewcs='brew cask cleanup'
-alias brewcd='brew cask doctor'
-alias brewch='brew cask home'
-alias brewci='brew cask info'
-alias brewcI='brew cask install'
-alias brewcl='brew cask list'
-alias brewcs='brew cask search'
-
-# brew file
-# if [ -f $(brew --prefix)/etc/brew-wrap ];then
-#   source $(brew --prefix)/etc/brew-wrap
-# fi
-alias brewfu='brew file update'
-alias brewfi='brew file init'
-alias brewfc='brew file clean'
-alias brewfU='brew file cask_upgrade'
-alias brewwrap='brew file brew'
-
-# git hub
-alias hubb='hub browse'
-
 # Python / pip
 alias pipu='pip install --user --install-option="--prefix="'
 alias pip3u='pip3 install --user --install-option="--prefix="'
@@ -278,8 +216,6 @@ alias screen='screen -U' # utfモードで起動
 # シェル起動時にscreenにアタッチ
 #screen -xR
 
-alias updatedb='sudo /usr/libexec/locate.updatedb'
-
 # javaの文字化け対策 (obsolete？)
 #alias java='java -Dfile.encoding=UTF-8'
 #alias javac='javac -J-Dfile.encoding=UTF-8'
@@ -292,10 +228,6 @@ alias jbibtex="pbibtex" # 互換性確保のためjbibtexでも通るように
 # rsync
 alias rsyncd="command rsync --daemon --config=/etc/rsyncd.conf"
 alias rsync="rsync --exclude-from=$CLOUD_CONFIG_HOME/rsync/ignore"
-
-# man
-alias man='env LANG=C man'
-alias jman='env LANG=ja_JP.UTF-8 man'
 
 ############
 ### 関数 ###
@@ -627,7 +559,7 @@ if which virtualenvwrapper_lazy > /dev/null; then
 fi
 
 # added by travis gem
-[ -f /Users/ats/.travis/travis.sh ] && source /Users/ats/.travis/travis.sh
+[ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
 
 # The next line updates PATH for the Google Cloud SDK.
 #source '/Users/ats/Developer/google-cloud-sdk/path.zsh.inc'

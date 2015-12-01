@@ -442,8 +442,8 @@ fpath=(
 #             ./lib)
 
 ## pylearn2
-export PYLEARN2_DATA_PATH=${HOME}/Documents/pylearn2/data
-export PYLEARN2_VIEWER_COMMAND="eog --new-instance"
+#export PYLEARN2_DATA_PATH=${HOME}/Documents/pylearn2/data
+#export PYLEARN2_VIEWER_COMMAND="eog --new-instance"
 path=(
     $path
     ~/local/src/github.com/lisa-lab/pylearn2/pylearn2/scripts(N-/)
@@ -467,6 +467,16 @@ path=(
 #                 $HOME/local/lib/pkgconfig(N-/)
 #                 # MacPorts用
 #                 /opt/local/lib/pkgconfig(N-/))
+
+#
+# node
+#
+#export NODEBREW_ROOT=$HOME/.nodebrew
+export NODEBREW_ROOT=/usr/local/var/nodebrew
+path=(
+    $path
+    $NODEBREW_ROOT/current/bin(N-/)
+)
 
 #
 # Less
