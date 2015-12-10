@@ -106,19 +106,13 @@ bindkey '^J' self-insert
 ### 環境変数 ###
 ################
 
+source $CLOUD_CONFIG_HOME/sh/env.sh
+
 # LS COLORS
 # prezto default is 'exfxcxdxbxGxDxabagacad'
 #export LSCOLORS='GxFxCxdxBxegedabagacad'
 # prezto default is 'di=34:ln=35:so=32:pi=33:ex=31:bd=36;01:cd=33;01:su=31;40;07:sg=36;40;07:tw=32;40;07:ow=33;40;07:'
 #export LS_COLORS='di=01;36:ln=01;35:so=01;32:ex=01;31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
-
-# Homebrew API Token (2014-06-27)
-if [ -f ~/.brew_api_token ]; then
-  source ~/.brew_api_token
-fi
-
-# MySQL history file
-export MYSQL_HISTFILE=${CLOUD_CACHE_HOME}/mysql/mysql_history
 
 ##################
 ### シェル変数 ###
