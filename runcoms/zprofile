@@ -209,6 +209,8 @@ case "$STUDIO_JDK" in
         ;;
 esac
 
+export RUBYMINE_JDK=$STUDIO_JDK
+
 # http://tools.android.com/tech-docs/configuration
 STUDIO_VM_OPTIONS=~/Dropbox/Library/Preferences/AndroidStudio/studio.vmoptions
 STUDIO_PROPERTIES=~/Dropbox/Library/Preferences/AndroidStudio/idea.properties

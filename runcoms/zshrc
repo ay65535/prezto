@@ -243,11 +243,12 @@ alias brewi='brew info'
 alias brewo='brew options'
 alias brewI='brew install'
 alias brewd='brew doctor'
-alias brewUd='brew update && brew upgrade && brew doctor'
+alias brewUd='brew update && brew upgrade --all && brew doctor'
 alias brewcd='brew cask doctor'
 alias brewch='brew cask home'
 alias brewci='brew cask info'
 alias brewcI='brew cask install'
+alias brewcl='brew cask list'
 alias brewcs='brew cask search'
 
 # git hub
@@ -642,8 +643,11 @@ fi
 
 # zsh プロファイリング用
 if [[ "$ZPROF_MODE" = true ]]; then
-  if (which zprof > /dev/null) ;then
+  if (which zprof > /dev/null); then
     #zprof > ~/GoogleDrive/dotfiles/zprof_"${USER}@${HOST%.local}"_prezto_`date +%y%m%d%H%M`.txt
     zprof | less
   fi
 fi
+
+# for iTerm2 nightly
+source ${HOME}/.iterm2_shell_integration.zsh
